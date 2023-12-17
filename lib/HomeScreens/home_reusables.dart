@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,11 +12,12 @@ class HomeWalletCard extends StatelessWidget {
     required this.balance,
     required this.onTap,
     required this.eye,
+    required this.topup,
   });
 
   final Size size;
   String balance;
-  Function() onTap;
+  Function() onTap, topup;
   bool eye;
 
   @override
@@ -108,36 +108,39 @@ class HomeWalletCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Material(
-                  elevation: 3,
-                  borderRadius: BorderRadius.circular(5),
-                  child: Container(
-                    height: 4 * size.height / 100,
-                    width: 30 * size.width / 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: Colors.blue,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                        WidthWidget(width: 1),
-                        Text(
-                          'Top-Up',
-                          style: GoogleFonts.acme(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
+                GestureDetector(
+                  onTap: topup,
+                  child: Material(
+                    elevation: 3,
+                    borderRadius: BorderRadius.circular(5),
+                    child: Container(
+                      height: 4 * size.height / 100,
+                      width: 30 * size.width / 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.blue,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 18,
+                          ),
+                          WidthWidget(width: 1),
+                          Text(
+                            'Top-Up',
+                            style: GoogleFonts.acme(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -332,6 +335,102 @@ class TransactionsTile extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                       color: coloType,
+                    ),
+                  ),
+                ),
+                Text(
+                  '$date',
+                  style: GoogleFonts.aBeeZee(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 10,
+                      color: Color.fromARGB(255, 97, 96, 96),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class WalletTile extends StatelessWidget {
+  WalletTile({
+    super.key,
+    required this.size,
+    required this.amount,
+    required this.date,
+    required this.subs,
+  });
+
+  final Size size;
+  String subs, amount, date;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(4),
+      height: 7 * size.height / 100,
+      width: double.infinity,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.asset(
+                'assets/images/pig.png',
+                height: 5 * size.height / 100,
+                width: 10 * size.width / 100,
+              ),
+              WidthWidget(width: 2),
+              SizedBox(
+                width: 38 * size.width / 100,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Top-up',
+                      style: GoogleFonts.acme(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '$subs',
+                      style: GoogleFonts.aBeeZee(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 10,
+                          color: Color.fromARGB(255, 97, 96, 96),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            width: 40 * size.width / 100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '$amount',
+                  style: GoogleFonts.acme(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.green,
                     ),
                   ),
                 ),

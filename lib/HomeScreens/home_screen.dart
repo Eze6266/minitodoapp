@@ -1,8 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
+import 'package:datahub/HomeScreens/DataScreens/data_screens.dart';
 import 'package:datahub/HomeScreens/home_reusables.dart';
+import 'package:datahub/HomeScreens/top_up_screen.dart';
+import 'package:datahub/TransactionsScreens/transactions_screen.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
+import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -118,6 +122,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     eye = !eye;
                   });
                 },
+                topup: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TopUpAccountScreen(),
+                    ),
+                  );
+                },
               ),
               HeightWidget(height: 2),
               Align(
@@ -162,7 +174,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           iconType: Icons.wifi,
                           boxColor: Colors.green.shade100,
                           iconColor: Colors.green,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DataScreen(),
+                              ),
+                            );
+                          },
                         ),
                         ServicesBoxes(
                           size: size,
@@ -281,7 +300,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavBar(chosenmyIndex: 2),
+                        ),
+                      );
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [

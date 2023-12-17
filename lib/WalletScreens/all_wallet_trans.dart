@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_constructors
 
 import 'package:datahub/HomeScreens/home_reusables.dart';
 import 'package:datahub/Utilities/app_colors.dart';
@@ -7,65 +7,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class TransactionsScreen extends StatefulWidget {
-  const TransactionsScreen({super.key});
+class AllWalletTransScreen extends StatefulWidget {
+  const AllWalletTransScreen({super.key});
 
   @override
-  State<TransactionsScreen> createState() => _TransactionsScreenState();
+  State<AllWalletTransScreen> createState() => _AllWalletTransScreenState();
 }
 
-class _TransactionsScreenState extends State<TransactionsScreen> {
-  List types = [
-    'Joseph',
-    'Manuel',
-    'Premium',
-    'Glo',
-    'Joseph',
-    'Manuel',
-    'Premium',
-    'Glo',
-  ];
+class _AllWalletTransScreenState extends State<AllWalletTransScreen> {
   List subs = [
-    'Electricity',
-    'Topup',
-    'DSTV',
-    'Data',
-    'Electricity',
-    'Topup',
-    'DSTV',
-    'Data',
+    'WEMA',
+    'MONNIEPOINT',
+    'STERLING',
+    'MONNIEPOINT',
+    'WEMA',
+    'MONNIEPOINT',
+    'STERLING',
+    'MONNIEPOINT',
+    'WEMA',
+    'MONNIEPOINT',
+    'STERLING',
+    'MONNIEPOINT',
   ];
   List amount = [
-    '-10,000',
+    '+10,000',
     '+25,000',
-    '-3,000',
-    '-1,800',
-    '-10,000',
+    '+3,000',
+    '+1,800',
+    '+10,000',
     '+25,000',
-    '-3,000',
-    '-1,800',
+    '+3,000',
+    '+1,800',
+    '+10,000',
+    '+25,000',
+    '+3,000',
+    '+1,800',
   ];
-  List imgs = [
-    'assets/images/elek.png',
-    'assets/images/pig.png',
-    'assets/images/pig.png',
-    'assets/images/tv.png',
-    'assets/images/elek.png',
-    'assets/images/pig.png',
-    'assets/images/pig.png',
-    'assets/images/tv.png',
-  ];
-  List color = [
-    Colors.red,
-    Colors.green,
-    Colors.green,
-    Colors.red,
-    Colors.red,
-    Colors.green,
-    Colors.green,
-    Colors.red,
-  ];
+
   List dates = [
+    '10:30am, 05 Dec 2023',
+    '08:43pm, 30 May 2023',
+    '08:43pm, 30 May 2023',
+    '08:43pm, 30 May 2023',
     '10:30am, 05 Dec 2023',
     '08:43pm, 30 May 2023',
     '08:43pm, 30 May 2023',
@@ -82,7 +65,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     filteredItems.clear();
 
     // Filter items based on the query
-    for (var item in types) {
+    for (var item in subs) {
       if (item.toLowerCase().contains(query.toLowerCase())) {
         filteredItems.add(item);
       }
@@ -97,7 +80,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    filteredItems = List.from(types);
+    filteredItems = List.from(subs);
   }
 
   bool isLoading = false;
@@ -111,15 +94,30 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: AppColors.primaryColor,
-        title: Text(
-          'Transactions',
-          style: GoogleFonts.aBeeZee(
-            textStyle: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
-              color: Colors.white,
+        title: Row(
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 18,
+              ),
             ),
-          ),
+            WidthWidget(width: 26),
+            Text(
+              'Wallet Transactions',
+              style: GoogleFonts.aBeeZee(
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
         centerTitle: true,
       ),
@@ -173,15 +171,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             HeightWidget(height: 2),
             Expanded(
               child: ListView.separated(
-                itemCount: filteredItems.length,
+                itemCount: subs.length,
                 itemBuilder: (context, index) {
-                  return TransactionsTile(
+                  return WalletTile(
                     amount: amount[index],
                     date: dates[index],
-                    img: imgs[index],
                     subs: subs[index],
-                    title: filteredItems[index],
-                    coloType: color[index],
                     size: size,
                   );
                 },

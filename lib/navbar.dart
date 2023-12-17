@@ -2,8 +2,6 @@
 
 import 'dart:async';
 
-import 'package:badges/badges.dart' as badges;
-import 'package:badges/badges.dart';
 import 'package:datahub/AccountScreens/account_screen.dart';
 import 'package:datahub/HomeScreens/home_screen.dart';
 import 'package:datahub/Utilities/app_colors.dart';
@@ -11,11 +9,8 @@ import 'package:datahub/WalletScreens/wallet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:google_fonts/google_fonts.dart';
-
 import 'TransactionsScreens/transactions_screen.dart';
 
 class NavBar extends StatefulWidget {
