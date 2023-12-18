@@ -238,7 +238,9 @@ class _DataScreenState extends State<DataScreen>
         height: 7,
         text: 'Continue',
         width: 90,
-        onPressed: () {},
+        onPressed: () {
+          ShowDataSummary().showBottomSheet(context);
+        },
         isLoading: isLoading,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

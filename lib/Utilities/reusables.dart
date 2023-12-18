@@ -1,9 +1,14 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:math';
+
+import 'package:confetti/confetti.dart';
 import 'package:datahub/Utilities/app_colors.dart';
+import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
 
 class HeightWidget extends StatelessWidget {
   HeightWidget({
@@ -403,6 +408,162 @@ class GeneralButton extends StatelessWidget {
                   weight: FontWeight.w400,
                 ),
         ),
+      ),
+    );
+  }
+}
+
+class SuccessPopupCard extends StatelessWidget {
+  SuccessPopupCard({
+    super.key,
+    required this.size,
+    required this.confetticontroller,
+    required this.textcontent,
+  });
+
+  final Size size;
+  final ConfettiController confetticontroller;
+  String textcontent;
+
+  @override
+  Widget build(BuildContext context) {
+    void _shareText() {
+      Share.share('Transaction Receipt $textcontent!');
+    }
+
+    return Material(
+      elevation: 8,
+      shadowColor: Colors.grey,
+      borderRadius: BorderRadius.circular(3),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(3),
+              color: Colors.white,
+            ),
+            width: 80 * size.width / 100,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  SizedBox(height: 2 * size.height / 100),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Successful',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 3 * size.height / 100),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: 3,
+                      width: 18 * size.width / 100,
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade700,
+                        borderRadius: BorderRadius.circular(100),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 0.3 * size.height / 100),
+                  Image.asset(
+                    'assets/images/headd.png',
+                    height: 130,
+                    width: 130,
+                  ),
+                  SizedBox(height: 1 * size.height / 100),
+                  Text(
+                    '$textcontent',
+                    style: GoogleFonts.harmattan(
+                      textStyle: TextStyle(
+                        color: Color.fromARGB(255, 81, 79, 79),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    textAlign: TextAlign.left,
+                  ),
+                  SizedBox(height: 3 * size.height / 100),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NavBar(chosenmyIndex: 0),
+                        ),
+                      );
+                    },
+                    child: Material(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Container(
+                        height: 5.5 * size.height / 100,
+                        width: 65 * size.width / 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: Colors.green.shade700),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.green.shade700,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 3 * size.height / 100),
+                  GestureDetector(
+                    onTap: () {
+                      _shareText();
+                    },
+                    child: Material(
+                      elevation: 2,
+                      borderRadius: BorderRadius.circular(100),
+                      child: Container(
+                        height: 5.5 * size.height / 100,
+                        width: 65 * size.width / 100,
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade700,
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: Colors.green.shade700),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Share',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 5 * size.height / 100),
+                ],
+              ),
+            ),
+          ),
+          ConfettiWidget(
+            shouldLoop: true,
+            gravity: 0.01,
+            blastDirection: pi / 2,
+            confettiController: confetticontroller,
+          ),
+        ],
       ),
     );
   }
