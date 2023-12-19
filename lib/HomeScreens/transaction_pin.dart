@@ -5,16 +5,12 @@ import 'dart:ui';
 import 'package:confetti/confetti.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 import '../../../../Utilities/app_colors.dart';
 
 class TransactionPinScreen extends StatefulWidget {
-  TransactionPinScreen({super.key});
-
+  TransactionPinScreen({super.key, required this.which});
+  var which;
   @override
   State<TransactionPinScreen> createState() => _TransactionPinScreenState();
 }
@@ -23,8 +19,10 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
   bool isLoading = false;
 
   List<FocusNode> _focusNodes = List.generate(4, (index) => FocusNode());
-  List<TextEditingController> _controllers =
-      List.generate(4, (index) => TextEditingController(text: ''));
+  List<TextEditingController> _controllers = List.generate(
+    4,
+    (index) => TextEditingController(text: ''),
+  );
 
   final confetticontroller = ConfettiController();
 
@@ -70,7 +68,7 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
+    confetticontroller.play();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
@@ -211,8 +209,11 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                             title: SuccessPopupCard(
                               size: size,
                               confetticontroller: confetticontroller,
-                              textcontent:
-                                  'You have Successfully sent 10GB of Data for 30 days to 07067581951. Cost NGN3,000.\nThank you for using DATAHUB',
+                              textcontent: widget.which == '1'
+                                  ? 'You have Successfully recharged N400 Airtime to 07067581951. Cost NGN420.\nThank you for using DATAHUB'
+                                  : widget.which == '2'
+                                      ? 'You have Successfully sent 10GB of Data for 30 days to 07067581951. Cost NGN3,000.\nThank you for using DATAHUB'
+                                      : 'You have Successfully Bought Electricity for 23322233222. Cost NGN5,000\nThank you for using DATAHUB',
                             ),
                           ),
                         );

@@ -1,38 +1,33 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'dart:async';
-
+import 'package:datahub/HomeScreens/BuyAirtimeScreens/airtime_reusables.dart';
 import 'package:datahub/HomeScreens/DataScreens/data_reusables.dart';
-import 'package:datahub/HomeScreens/home_reusables.dart';
 import 'package:datahub/HomeScreens/top_up_screen.dart';
-import 'package:datahub/Providers/data_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
-class DataScreen extends StatefulWidget {
-  const DataScreen({super.key});
+class AirtimeScreens extends StatefulWidget {
+  const AirtimeScreens({super.key});
 
   @override
-  State<DataScreen> createState() => _DataScreenState();
+  State<AirtimeScreens> createState() => _AirtimeScreensState();
 }
 
-class _DataScreenState extends State<DataScreen>
-    with SingleTickerProviderStateMixin {
+class _AirtimeScreensState extends State<AirtimeScreens> {
   TextEditingController phoneController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  bool isLoading = false;
   bool mtn = false;
   bool airtel = false;
   bool glo = false;
   bool etisalat = false;
-  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    var dataType = Provider.of<DataProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -62,9 +57,9 @@ class _DataScreenState extends State<DataScreen>
                 ),
               ),
             ),
-            WidthWidget(width: 26),
+            WidthWidget(width: 30),
             Text(
-              'Buy Data Bundle',
+              'Buy Airtime',
               style: GoogleFonts.aBeeZee(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.w500,
@@ -89,7 +84,7 @@ class _DataScreenState extends State<DataScreen>
                   baseColor: Colors.red,
                   highlightColor: Color(0xffFFD700),
                   child: Text(
-                    'LOAD DATA BUNDLE',
+                    'RECHARGE AIRTIME',
                     style: GoogleFonts.acme(
                       textStyle: TextStyle(
                         color: Color(0xffFFD700),
@@ -187,7 +182,7 @@ class _DataScreenState extends State<DataScreen>
                   ],
                 ),
               ),
-              HeightWidget(height: 2),
+              HeightWidget(height: 4),
               Padding(
                 padding: EdgeInsets.symmetric(
                   horizontal: 2 * size.width / 100,
@@ -201,42 +196,26 @@ class _DataScreenState extends State<DataScreen>
                   isloading: isLoading,
                 ),
               ),
-              HeightWidget(height: 2),
-              DropdownAndTitle(
-                size: size,
-                text: dataType.seldataType == 1
-                    ? 'SME'
-                    : dataType.seldataType == 2
-                        ? 'Normal Data'
-                        : dataType.seldataType == 3
-                            ? 'Enterprise Data'
-                            : 'Select Data Type',
-                title: 'Choose Data Type',
-                onTap: () {
-                  ChooseDataType().showBottomSheet(context);
-                },
-              ),
-              HeightWidget(height: 3),
-              DropdownAndTitle(
-                size: size,
-                text: dataType.seldataPlan == 1
-                    ? 'N200 200MB - 3 days'
-                    : dataType.seldataPlan == 2
-                        ? 'N2,000 4GB - 30 days'
-                        : dataType.seldataPlan == 3
-                            ? 'N2,500 6GB - 30 days'
-                            : 'Select Data Plan',
-                title: 'Choose Data Plan',
-                onTap: () {
-                  ChooseDataPlan().showBottomSheet(context);
-                },
+              HeightWidget(height: 4),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 2 * size.width / 100,
+                ),
+                child: TitleTextFieldTile(
+                  size: size,
+                  whichController: amountController,
+                  hint: 'Enter amount to recharge',
+                  title: 'Input Amount',
+                  keyboardtype: TextInputType.number,
+                  isloading: isLoading,
+                ),
               ),
               HeightWidget(height: 0.3),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
                 child: BalanceAndFundRow(),
               ),
-              HeightWidget(height: 6),
+              HeightWidget(height: 5),
               Center(
                 child: PoppinsCustText(
                   color: Colors.black,
@@ -274,7 +253,7 @@ class _DataScreenState extends State<DataScreen>
         text: 'Continue',
         width: 90,
         onPressed: () {
-          ShowDataSummary().showBottomSheet(context, '2');
+          ShowAirtimeSummary().showBottomSheet(context, '1');
         },
         isLoading: isLoading,
       ),

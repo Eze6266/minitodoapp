@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:datahub/HomeScreens/home_reusables.dart';
+import 'package:datahub/HomeScreens/top_up_screen.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:datahub/WalletScreens/all_wallet_trans.dart';
@@ -128,22 +129,32 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
             HeightWidget(height: 3),
             Center(
-              child: Material(
-                elevation: 3,
-                borderRadius: BorderRadius.circular(10),
-                child: Container(
-                  height: 7 * size.height / 100,
-                  width: 90 * size.width / 100,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 9, 90, 155),
-                  ),
-                  child: Center(
-                    child: PoppinsCustText(
-                      color: Colors.white,
-                      size: 14.0,
-                      text: 'Fund Wallet',
-                      weight: FontWeight.w500,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TopUpAccountScreen(),
+                    ),
+                  );
+                },
+                child: Material(
+                  elevation: 3,
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    height: 7 * size.height / 100,
+                    width: 90 * size.width / 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromARGB(255, 9, 90, 155),
+                    ),
+                    child: Center(
+                      child: PoppinsCustText(
+                        color: Colors.white,
+                        size: 14.0,
+                        text: 'Fund Wallet',
+                        weight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),

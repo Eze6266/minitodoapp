@@ -230,8 +230,8 @@ class TopProvidersShit extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 6.5 * size.height / 100,
-            width: 14 * size.width / 100,
+            height: 4 * size.height / 100,
+            width: 9 * size.width / 100,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100),
               image: DecorationImage(
@@ -246,7 +246,7 @@ class TopProvidersShit extends StatelessWidget {
             style: GoogleFonts.aBeeZee(
               textStyle: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 12,
+                fontSize: 10,
                 color: Colors.black,
               ),
             ),

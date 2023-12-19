@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
+import 'package:datahub/HomeScreens/BuyAirtimeScreens/airtime_screen.dart';
+import 'package:datahub/HomeScreens/CableTvScreens/cable_tv_screen.dart';
 import 'package:datahub/HomeScreens/DataScreens/data_screens.dart';
+import 'package:datahub/HomeScreens/ElectrictyScreens/electricity_screen.dart';
+import 'package:datahub/HomeScreens/NotificationScreens/notification_screen.dart';
 import 'package:datahub/HomeScreens/home_reusables.dart';
 import 'package:datahub/HomeScreens/top_up_screen.dart';
 import 'package:datahub/TransactionsScreens/transactions_screen.dart';
@@ -8,7 +12,9 @@ import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:text_scroll/text_scroll.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+// 🙀😱😲
   List types = [
     'Joseph',
     'Manuel',
@@ -83,32 +90,52 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               HeightWidget(height: 2),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: Color(0xfffbbc05),
-                    radius: 20,
-                    backgroundImage: AssetImage('assets/images/avatar.png'),
-                  ),
-                  WidthWidget(width: 1),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      PoppinsCustText(
-                        color: Colors.black,
-                        size: 14.0,
-                        text: '$greeting Manuel',
-                        weight: FontWeight.w400,
+                      CircleAvatar(
+                        backgroundColor: Color(0xfffbbc05),
+                        radius: 20,
+                        backgroundImage: AssetImage('assets/images/avatar.png'),
                       ),
-                      HeightWidget(height: 0.3),
-                      PoppinsCustText(
-                        color: Color(0xff8c8b90),
-                        size: 10.0,
-                        text: 'What do you want to do today?',
-                        weight: FontWeight.w400,
+                      WidthWidget(width: 1),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          PoppinsCustText(
+                            color: Colors.black,
+                            size: 14.0,
+                            text: '$greeting Manuel',
+                            weight: FontWeight.w400,
+                          ),
+                          HeightWidget(height: 0.3),
+                          PoppinsCustText(
+                            color: Color(0xff8c8b90),
+                            size: 10.0,
+                            text: 'What do you want to do today?',
+                            weight: FontWeight.w400,
+                          ),
+                        ],
                       ),
                     ],
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationScreen(),
+                        ),
+                      );
+                    },
+                    child: FaIcon(
+                      FontAwesomeIcons.bell,
+                      size: 20,
+                      color: Colors.black,
+                    ),
                   ),
                 ],
               ),
@@ -131,7 +158,55 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 },
               ),
-              HeightWidget(height: 2),
+              HeightWidget(height: 1),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 76 * size.width / 100,
+                    child: TextScroll(
+                      'MTN is giving out 4GB of Data for every 20GB you subscribe from Dec 11 to jan 3. Hurry now and get ours 🙀',
+                      mode: TextScrollMode.endless,
+                      velocity: Velocity(pixelsPerSecond: Offset(70, 0)),
+                      delayBefore: Duration(seconds: 4),
+                      numberOfReps: null,
+                      pauseBetween: Duration(seconds: 5),
+                      style: GoogleFonts.acme(
+                        textStyle: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w200,
+                        ),
+                      ),
+                      textAlign: TextAlign.right,
+                      selectable: true,
+                      fadedBorder: true,
+                      fadedBorderWidth: 0.05,
+                      fadeBorderVisibility: FadeBorderVisibility.auto,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => NotificationScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Check it👉',
+                      style: GoogleFonts.abel(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              HeightWidget(height: 1),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -166,7 +241,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           iconType: Icons.phone_outlined,
                           boxColor: Colors.pink.shade100,
                           iconColor: Colors.pink,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AirtimeScreens(),
+                              ),
+                            );
+                          },
                         ),
                         ServicesBoxes(
                           size: size,
@@ -189,7 +271,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           iconType: Icons.live_tv_outlined,
                           boxColor: Colors.orange.shade100,
                           iconColor: Colors.orange,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CableTvScreen(),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -203,7 +292,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           iconType: Icons.tips_and_updates_outlined,
                           boxColor: Colors.purple.shade100,
                           iconColor: Colors.purple,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ElectricityScreen(),
+                              ),
+                            );
+                          },
                         ),
                         ServicesBoxes(
                           size: size,
@@ -242,7 +338,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               HeightWidget(height: 0.1),
               SizedBox(
-                height: 10 * size.height / 100,
+                height: 7 * size.height / 100,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
@@ -285,7 +381,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
               ),
-              HeightWidget(height: 1.5),
+              HeightWidget(height: 1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

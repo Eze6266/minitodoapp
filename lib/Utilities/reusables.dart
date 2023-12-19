@@ -10,6 +10,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
 
+import '../HomeScreens/top_up_screen.dart';
+
 class HeightWidget extends StatelessWidget {
   HeightWidget({
     super.key,
@@ -112,6 +114,7 @@ class TitleTextFieldTile extends StatelessWidget {
     required this.keyboardtype,
     this.onChanged,
     required this.isloading,
+    this.textColor,
   });
 
   final Size size;
@@ -121,6 +124,7 @@ class TitleTextFieldTile extends StatelessWidget {
   TextInputType keyboardtype;
   void Function(String)? onChanged;
   bool isloading;
+  Color? textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -150,6 +154,7 @@ class TitleTextFieldTile extends StatelessWidget {
               cursorColor: Colors.grey,
               controller: whichController,
               keyboardType: keyboardtype,
+              style: TextStyle(color: textColor ?? Colors.black),
               decoration: InputDecoration(
                 fillColor: Color(0xfff8f8f8),
                 filled: true,
@@ -562,6 +567,147 @@ class SuccessPopupCard extends StatelessWidget {
             gravity: 0.01,
             blastDirection: pi / 2,
             confettiController: confetticontroller,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BalanceAndFundRow extends StatelessWidget {
+  BalanceAndFundRow({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'Wallet Balance:',
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 12,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            WidthWidget(width: 1),
+            Text(
+              '40,000',
+              style: GoogleFonts.acme(
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          ],
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TopUpAccountScreen(),
+              ),
+            );
+          },
+          child: Text(
+            'FUND WALLET',
+            style: GoogleFonts.acme(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 12,
+                color: AppColors.primaryColor,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class VerificationRow extends StatelessWidget {
+  VerificationRow({
+    super.key,
+    required this.size,
+    required this.idVerified,
+    required this.onTap,
+  });
+
+  final Size size;
+  final bool idVerified;
+  Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              height: 3.5 * size.height / 100,
+              width: 20 * size.width / 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                color: AppColors.primaryColor,
+              ),
+              child: Center(
+                child: Text(
+                  'Verify',
+                  style: GoogleFonts.acme(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      // color: Color.fromARGB(255, 198, 204, 213),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                idVerified ? 'Verified' : 'Unverified',
+                style: GoogleFonts.acme(
+                  textStyle: TextStyle(
+                    color: idVerified ? Colors.green : Colors.black,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+              WidthWidget(width: 1),
+              idVerified
+                  ? Material(
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(6),
+                      child: CircleAvatar(
+                        radius: 6,
+                        backgroundColor: Colors.white,
+                        child: Icon(
+                          Icons.check,
+                          size: 12,
+                          color: Colors.green,
+                        ),
+                      ),
+                    )
+                  : SizedBox.shrink(),
+            ],
           ),
         ],
       ),

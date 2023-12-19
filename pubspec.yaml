@@ -44,6 +44,7 @@ dependencies:
   fluttertoast: ^8.2.2
   font_awesome_flutter: ^10.0.0
   confetti: ^0.6.0
+  text_scroll: ^0.2.0
   http: ^0.13.5
   intl: ^0.17.0
   connectivity_widget: ^1.0.0

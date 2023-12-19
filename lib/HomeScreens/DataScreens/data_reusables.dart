@@ -435,7 +435,7 @@ class ChooseDataPlan {
 
 class ShowDataSummary {
   TextEditingController searchController = TextEditingController();
-  void showBottomSheet(BuildContext context) {
+  void showBottomSheet(BuildContext context, String which) {
     var dataType = Provider.of<DataProvider>(context, listen: false);
     bool isLoading = false;
     showModalBottomSheet(
@@ -570,7 +570,8 @@ class ShowDataSummary {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TransactionPinScreen(),
+                            builder: (context) =>
+                                TransactionPinScreen(which: which),
                           ),
                         );
                         // ShowDataSummary().showBottomSheet(context);
