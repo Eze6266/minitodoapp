@@ -157,56 +157,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   );
                 },
+                transClick: () {
+                  NavBar(chosenmyIndex: 2);
+                },
               ),
-              HeightWidget(height: 1),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 76 * size.width / 100,
-                    child: TextScroll(
-                      'MTN is giving out 4GB of Data for every 20GB you subscribe from Dec 11 to jan 3. Hurry now and get ours 🙀',
-                      mode: TextScrollMode.endless,
-                      velocity: Velocity(pixelsPerSecond: Offset(70, 0)),
-                      delayBefore: Duration(seconds: 4),
-                      numberOfReps: null,
-                      pauseBetween: Duration(seconds: 5),
-                      style: GoogleFonts.acme(
-                        textStyle: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w200,
-                        ),
-                      ),
-                      textAlign: TextAlign.right,
-                      selectable: true,
-                      fadedBorder: true,
-                      fadedBorderWidth: 0.05,
-                      fadeBorderVisibility: FadeBorderVisibility.auto,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NotificationScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'Check it👉',
-                      style: GoogleFonts.abel(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 12,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              HeightWidget(height: 1),
+              HeightWidget(height: 2),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -227,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: 95 * size.width / 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: AppColors.primaryColor,
+                  color: Color.fromARGB(255, 9, 90, 155),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -239,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           size: size,
                           service: 'Airtime Top-up',
                           iconType: Icons.phone_outlined,
-                          boxColor: Colors.pink.shade100,
+                          boxColor: Color.fromARGB(255, 127, 181, 226),
                           iconColor: Colors.pink,
                           onTap: () {
                             Navigator.push(
@@ -323,65 +278,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               HeightWidget(height: 2),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Top Providers',
-                  style: GoogleFonts.aBeeZee(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              HeightWidget(height: 0.1),
-              SizedBox(
-                height: 7 * size.height / 100,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: [
-                    TopProvidersShit(
-                      size: size,
-                      colorType: Colors.yellow,
-                      provider: 'MTN',
-                      imgUrl: 'tn.jpg',
-                    ),
-                    TopProvidersShit(
-                      size: size,
-                      colorType: Colors.red,
-                      provider: 'Airtel',
-                      imgUrl: 'tel.jpg',
-                    ),
-                    TopProvidersShit(
-                      size: size,
-                      colorType: Colors.green,
-                      provider: 'Glo',
-                      imgUrl: 'lo.png',
-                    ),
-                    TopProvidersShit(
-                      size: size,
-                      colorType: Colors.orange,
-                      provider: 'Startimes',
-                      imgUrl: 'time.png',
-                    ),
-                    TopProvidersShit(
-                      size: size,
-                      colorType: Colors.purple,
-                      provider: 'GOTV',
-                      imgUrl: 'otv.png',
-                    ),
-                    TopProvidersShit(
-                      size: size,
-                      colorType: Colors.pink,
-                      provider: 'Spectranet',
-                      imgUrl: 'net.png',
-                    ),
-                  ],
-                ),
-              ),
-              HeightWidget(height: 1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

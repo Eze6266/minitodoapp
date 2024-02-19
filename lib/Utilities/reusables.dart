@@ -582,7 +582,7 @@ class BalanceAndFundRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -610,26 +610,26 @@ class BalanceAndFundRow extends StatelessWidget {
             ),
           ],
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => TopUpAccountScreen(),
-              ),
-            );
-          },
-          child: Text(
-            'FUND WALLET',
-            style: GoogleFonts.acme(
-              textStyle: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
-                color: AppColors.primaryColor,
-              ),
-            ),
-          ),
-        ),
+        // GestureDetector(
+        //   onTap: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //         builder: (context) => TopUpAccountScreen(),
+        //       ),
+        //     );
+        //   },
+        //   child: Text(
+        //     'FUND WALLET',
+        //     style: GoogleFonts.acme(
+        //       textStyle: TextStyle(
+        //         fontWeight: FontWeight.w500,
+        //         fontSize: 12,
+        //         color: AppColors.primaryColor,
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }
@@ -665,49 +665,138 @@ class VerificationRow extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  'Verify',
-                  style: GoogleFonts.acme(
+                  'Check',
+                  style: GoogleFonts.lato(
                     textStyle: TextStyle(
                       color: Colors.white,
                       // color: Color.fromARGB(255, 198, 204, 213),
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                idVerified ? 'Verified' : 'Unverified',
-                style: GoogleFonts.acme(
-                  textStyle: TextStyle(
-                    color: idVerified ? Colors.green : Colors.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+          idVerified
+              ? Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(6),
+                  child: CircleAvatar(
+                    radius: 8,
+                    backgroundColor: Colors.blue,
+                    child: Icon(
+                      Icons.check,
+                      size: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+              : SizedBox.shrink(),
+        ],
+      ),
+    );
+  }
+}
+
+class PasswordTitleTextFieldTile extends StatefulWidget {
+  PasswordTitleTextFieldTile({
+    super.key,
+    required this.size,
+    required this.whichController,
+    required this.hint,
+    required this.title,
+    required this.keyboardtype,
+    required this.isPasswordVisible,
+    required this.onChanged,
+  });
+
+  final Size size;
+  final TextEditingController whichController;
+  String hint;
+  String title;
+  TextInputType keyboardtype;
+  bool isPasswordVisible;
+  final void Function(String) onChanged;
+
+  @override
+  State<PasswordTitleTextFieldTile> createState() =>
+      _PasswordTitleTextFieldTileState();
+}
+
+class _PasswordTitleTextFieldTileState
+    extends State<PasswordTitleTextFieldTile> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 1 * widget.size.width / 100),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: PoppinsCustText(
+                color: Colors.black,
+                size: 12.0,
+                text: widget.title,
+                weight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(height: 0.5 * widget.size.height / 100),
+          SizedBox(
+            width: 90 * widget.size.width / 100,
+            child: TextFormField(
+              onChanged: widget.onChanged,
+              obscuringCharacter: '*',
+              obscureText: widget.isPasswordVisible,
+              showCursor: true,
+              cursorColor: Colors.grey,
+              controller: widget.whichController,
+              keyboardType: widget.keyboardtype,
+              decoration: InputDecoration(
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      widget.isPasswordVisible = !widget.isPasswordVisible;
+                    });
+                  },
+                  child: Icon(
+                    widget.isPasswordVisible
+                        ? Icons.visibility_outlined
+                        : Icons.visibility_off_outlined,
+                    size: 18,
+                    color: Colors.black,
                   ),
                 ),
+                fillColor: Color(0xfff8f8f8),
+                filled: true,
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xff92a4b5),
+                    width: 0.5,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(),
+                ),
+                hintText: '${widget.hint}',
+                hintStyle: TextStyle(
+                  color: Color(0xffc2c4cf),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Color(0xff92a4b5),
+                    width: 0.5,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
-              WidthWidget(width: 1),
-              idVerified
-                  ? Material(
-                      elevation: 1,
-                      borderRadius: BorderRadius.circular(6),
-                      child: CircleAvatar(
-                        radius: 6,
-                        backgroundColor: Colors.white,
-                        child: Icon(
-                          Icons.check,
-                          size: 12,
-                          color: Colors.green,
-                        ),
-                      ),
-                    )
-                  : SizedBox.shrink(),
-            ],
+            ),
           ),
         ],
       ),

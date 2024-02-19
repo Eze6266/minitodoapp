@@ -76,25 +76,6 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
           padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
           child: Column(
             children: [
-              HeightWidget(height: 2),
-              Center(
-                child: Shimmer.fromColors(
-                  period: Duration(seconds: 3),
-                  baseColor: Colors.red,
-                  highlightColor: Color(0xffFFD700),
-                  child: Text(
-                    'PAY ELECTRICITY BILL',
-                    style: GoogleFonts.acme(
-                      textStyle: TextStyle(
-                        color: Color(0xffFFD700),
-                        // color: Color.fromARGB(255, 198, 204, 213),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               HeightWidget(height: 4),
               DropdownAndTitle(
                 size: size,
@@ -119,14 +100,13 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
               ),
               HeightWidget(height: 0.6),
               Container(
-                height: 7 * size.height / 100,
+                // height: 7 * size.height / 100,
                 width: 90 * size.width / 100,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: Colors.blue.shade100,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     PrepaidPostpaidChip(
                       size: size,
@@ -142,6 +122,7 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
                         });
                       },
                     ),
+                    WidthWidget(width: 3),
                     PrepaidPostpaidChip(
                       size: size,
                       chipColor: postpaid

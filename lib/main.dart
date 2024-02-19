@@ -1,13 +1,32 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:datahub/AuthScreens/login_screen.dart';
+import 'package:datahub/AuthScreens/sign_up_screen.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Providers/data_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: '.env');
+  await FlutterConfig.loadEnvVariables();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  ); // Lock the app to PortraitUp mode
+
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(
     AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -18,6 +37,9 @@ void main() {
         providers: [
           ChangeNotifierProvider<DataProvider>(
             create: (context) => DataProvider(),
+          ),
+          ChangeNotifierProvider<AuthProvider>(
+            create: (context) => AuthProvider(),
           ),
         ],
         child: MyApp(),
@@ -39,7 +61,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: NavBar(chosenmyIndex: 0),
+      home: LoginScreen(),
     );
   }
 }

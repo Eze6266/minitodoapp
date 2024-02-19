@@ -29,15 +29,15 @@ class PrepaidPostpaidChip extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 5 * size.height / 100,
-        width: 40 * size.width / 100,
+        width: 18 * size.width / 100,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(100),
           color: chipColor,
         ),
         child: Center(
           child: PoppinsCustText(
             color: textColor,
-            size: 16.0,
+            size: 10.0,
             text: type,
             weight: FontWeight.w600,
           ),

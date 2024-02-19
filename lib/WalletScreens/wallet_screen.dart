@@ -127,39 +127,39 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
               ),
             ),
-            HeightWidget(height: 3),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => TopUpAccountScreen(),
-                    ),
-                  );
-                },
-                child: Material(
-                  elevation: 3,
-                  borderRadius: BorderRadius.circular(10),
-                  child: Container(
-                    height: 7 * size.height / 100,
-                    width: 90 * size.width / 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color.fromARGB(255, 9, 90, 155),
-                    ),
-                    child: Center(
-                      child: PoppinsCustText(
-                        color: Colors.white,
-                        size: 14.0,
-                        text: 'Fund Wallet',
-                        weight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+
+            // Center(
+            //   child: GestureDetector(
+            //     onTap: () {
+            //       Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => TopUpAccountScreen(),
+            //         ),
+            //       );
+            //     },
+            //     child: Material(
+            //       elevation: 3,
+            //       borderRadius: BorderRadius.circular(10),
+            //       child: Container(
+            //         height: 7 * size.height / 100,
+            //         width: 90 * size.width / 100,
+            //         decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(10),
+            //           color: Color.fromARGB(255, 9, 90, 155),
+            //         ),
+            //         child: Center(
+            //           child: PoppinsCustText(
+            //             color: Colors.white,
+            //             size: 14.0,
+            //             text: 'Fund Wallet',
+            //             weight: FontWeight.w500,
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             HeightWidget(height: 4),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 2 * size.width / 100),

@@ -77,25 +77,6 @@ class _AirtimeScreensState extends State<AirtimeScreens> {
           padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
           child: Column(
             children: [
-              HeightWidget(height: 2),
-              Center(
-                child: Shimmer.fromColors(
-                  period: Duration(seconds: 3),
-                  baseColor: Colors.red,
-                  highlightColor: Color(0xffFFD700),
-                  child: Text(
-                    'RECHARGE AIRTIME',
-                    style: GoogleFonts.acme(
-                      textStyle: TextStyle(
-                        color: Color(0xffFFD700),
-                        // color: Color.fromARGB(255, 198, 204, 213),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
               HeightWidget(height: 4),
               Padding(
                 padding: EdgeInsets.only(left: 2 * size.width / 100),
@@ -103,7 +84,7 @@ class _AirtimeScreensState extends State<AirtimeScreens> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Select Network',
-                    style: GoogleFonts.acme(
+                    style: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16,

@@ -13,11 +13,12 @@ class HomeWalletCard extends StatelessWidget {
     required this.onTap,
     required this.eye,
     required this.topup,
+    required this.transClick,
   });
 
   final Size size;
   String balance;
-  Function() onTap, topup;
+  Function() onTap, topup, transClick;
   bool eye;
 
   @override
@@ -56,23 +57,45 @@ class HomeWalletCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Shimmer.fromColors(
-                  period: Duration(seconds: 3),
-                  baseColor: Colors.red,
-                  highlightColor: Color(0xffFFD700),
-                  child: Text(
-                    'DATAHUB',
-                    style: GoogleFonts.acme(
-                      textStyle: TextStyle(
-                        color: Color(0xffFFD700),
-                        // color: Color.fromARGB(255, 198, 204, 213),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
+                GestureDetector(
+                  onTap: transClick,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Transactions',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
                       ),
-                    ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 14,
+                      ),
+                    ],
                   ),
                 ),
+                // Shimmer.fromColors(
+                //   period: Duration(seconds: 3),
+                //   baseColor: Colors.red,
+                //   highlightColor: Color(0xffFFD700),
+                //   child: Text(
+                //     'DATAHUB',
+                //     style: GoogleFonts.acme(
+                //       textStyle: TextStyle(
+                //         color: Color(0xffFFD700),
+                //         // color: Color.fromARGB(255, 198, 204, 213),
+                //         fontSize: 16,
+                //         fontWeight: FontWeight.w500,
+                //         fontStyle: FontStyle.italic,
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -180,7 +203,7 @@ class ServicesBoxes extends StatelessWidget {
         width: 24 * size.width / 100,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: boxColor,
+          color: Colors.brown.shade100,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -188,7 +211,7 @@ class ServicesBoxes extends StatelessWidget {
             Icon(
               iconType,
               size: 18,
-              color: iconColor,
+              color: Colors.black,
             ),
             HeightWidget(height: 0.5),
             Text(
@@ -276,7 +299,7 @@ class TransactionsTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(4),
+      padding: EdgeInsets.all(2),
       height: 7 * size.height / 100,
       width: double.infinity,
       child: Row(
@@ -289,8 +312,9 @@ class TransactionsTile extends StatelessWidget {
                 img,
                 height: 5 * size.height / 100,
                 width: 10 * size.width / 100,
+                fit: BoxFit.cover,
               ),
-              WidthWidget(width: 2),
+              WidthWidget(width: 1),
               SizedBox(
                 width: 38 * size.width / 100,
                 child: Column(

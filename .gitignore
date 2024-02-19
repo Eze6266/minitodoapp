@@ -8,12 +8,14 @@
 .buildlog/
 .history
 .svn/
+.env
 migrate_working_dir/
 
 # IntelliJ related
 *.iml
 *.ipr
 *.iws
+*.env
 .idea/
 
 # The .vscode folder contains launch configuration and tasks you configure in
