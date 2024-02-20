@@ -2,7 +2,9 @@
 
 import 'dart:convert';
 
+import 'package:datahub/AuthScreens/forgot_password.dart';
 import 'package:datahub/AuthScreens/sign_up_screen.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/gestures.dart';
@@ -12,6 +14,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../navbar.dart';
 
@@ -64,6 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var loginUserApi = Provider.of<AuthProvider>(context);
+    isLoading = Provider.of<AuthProvider>(context).loginUserIsLoading;
 
     return WillPopScope(
       onWillPop: () async {
@@ -152,12 +158,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       onTap: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => ForgotPasswordScreen(),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ForgotPasswordScreen(),
+                          ),
+                        );
                       },
                       child: PoppinsCustText(
                         color: Colors.black,
@@ -176,10 +182,36 @@ class _LoginScreenState extends State<LoginScreen> {
                         ? Color(0xffc2c4cf)
                         : AppColors.primaryColor,
                     height: 7,
-                    text: 'Continue',
+                    text: 'Login',
                     width: 85,
-                    onPressed:
-                        emailError || passwordError ? () {} : () async {}),
+                    onPressed: emailError || passwordError
+                        ? () {}
+                        : () async {
+                            await loginUserApi
+                                .loginUser(emailController.text,
+                                    passwordController.text)
+                                .then(
+                              (value) {
+                                if (value == 'success') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          NavBar(chosenmyIndex: 0),
+                                    ),
+                                  );
+                                } else {
+                                  showTopSnackBar(
+                                    Overlay.of(context),
+                                    CustomSnackBar.error(
+                                      message: loginUserApi.loginUserMessage,
+                                    ),
+                                    dismissType: DismissType.onSwipe,
+                                  );
+                                }
+                              },
+                            );
+                          }),
                 SizedBox(height: 5 * size.height / 100),
                 RichText(
                   text: TextSpan(

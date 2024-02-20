@@ -62,41 +62,44 @@ class AuthProvider extends ChangeNotifier {
 
   ///////////////////////**LOGIN USER */////////////////////////////
 
-  bool loginPartIsLoading = false;
-  var loginPartStatus = '';
-  var loginPartMessage = '';
+  bool loginUserIsLoading = false;
+  var loginUserStatus = '';
+  var loginUserMessage = '';
 
-  Future<String?> loginNewPartner(
-    String phoneNumber,
+  Future<String?> loginUser(
+    String email,
     String password,
   ) async {
-    loginPartIsLoading = true;
+    loginUserIsLoading = true;
     notifyListeners();
     var response = await http.post(
-        Uri.parse(
-            'https://picadailys-app-6hlm.onrender.com/api/v1/accounts/login/'),
-        body: {
-          "phone_number": phoneNumber,
+      Uri.parse('https://vtu-apis.onrender.com/api/users/login-user'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(
+        {
+          "email": email,
           "password": password,
-        });
-    print('this is login partner response code ${response.statusCode}');
+        },
+      ),
+    );
+    print('this is login response code ${response.statusCode}');
 
-    loginPartIsLoading = false;
+    loginUserIsLoading = false;
     notifyListeners();
     var data = response.body;
     print(data);
     if (response.statusCode == 201 || response.statusCode == 200) {
-      debugPrint('reg partner was a succes');
+      debugPrint('login was a succes');
       String responseString = response.body;
-      loginPartStatus = jsonDecode(responseString)['status'];
-      loginPartMessage = jsonDecode(responseString)['message'];
+      loginUserStatus = jsonDecode(responseString)['status'];
+      loginUserMessage = jsonDecode(responseString)['message'];
 
       notifyListeners();
-      return loginPartStatus;
+      return loginUserStatus;
     } else {
       String responseString = response.body;
-      loginPartStatus = jsonDecode(responseString)['status'];
-      loginPartMessage = jsonDecode(responseString)['message'];
+      loginUserStatus = jsonDecode(responseString)['status'];
+      loginUserMessage = jsonDecode(responseString)['message'];
       notifyListeners();
     }
     notifyListeners();
@@ -104,7 +107,53 @@ class AuthProvider extends ChangeNotifier {
   }
 
 ///////////////////////**LOGIN USER */////////////////////////////
-  void partnerAuthNotifer() {
+
+  ///////////////////////** FORGOT PASSWORD */////////////////////////////
+
+  bool forgotPwdIsLoading = false;
+  var forgotPwdStatus = '';
+  var forgotPwdMessage = '';
+
+  Future<String?> forgotPassword(
+    String email,
+  ) async {
+    forgotPwdIsLoading = true;
+    notifyListeners();
+    var response = await http.post(
+      Uri.parse('https://vtu-apis.onrender.com/api/users/forgetpassword'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(
+        {
+          "email": email,
+        },
+      ),
+    );
+    print('this is forgot password response code ${response.statusCode}');
+
+    forgotPwdIsLoading = false;
+    notifyListeners();
+    var data = response.body;
+    print(data);
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      debugPrint('mail sent was a succes');
+      String responseString = response.body;
+      forgotPwdStatus = jsonDecode(responseString)['status'];
+      forgotPwdMessage = jsonDecode(responseString)['message'];
+
+      notifyListeners();
+      return forgotPwdStatus;
+    } else {
+      String responseString = response.body;
+      forgotPwdStatus = jsonDecode(responseString)['status'];
+      forgotPwdMessage = jsonDecode(responseString)['message'];
+      notifyListeners();
+    }
+    notifyListeners();
+    return null;
+  }
+
+///////////////////////**FORGOT PASSWORD*/////////////////////////////
+  void authNotifer() {
     notifyListeners();
   }
 }

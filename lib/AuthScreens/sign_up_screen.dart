@@ -8,6 +8,8 @@ import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class SignUpScreen extends StatefulWidget {
   SignUpScreen({super.key});
@@ -147,13 +149,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ? Colors.grey
                       : AppColors.primaryColor,
                   height: 7,
-                  text: 'Sign Up',
+                  text: 'Continue',
                   width: 90,
                   onPressed: usernameController.text.isEmpty ||
                           firstNameController.text.isEmpty ||
                           lastNameController.text.isEmpty ||
                           phoneController.text.isEmpty
-                      ? () {}
+                      ? () {
+                          showTopSnackBar(
+                            Overlay.of(context),
+                            CustomSnackBar.error(
+                              message: 'Make sure all fields are filled',
+                            ),
+                            dismissType: DismissType.onSwipe,
+                          );
+                        }
                       : () async {
                           Navigator.push(
                             context,

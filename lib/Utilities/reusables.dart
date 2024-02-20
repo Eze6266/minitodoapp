@@ -6,6 +6,7 @@ import 'package:confetti/confetti.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share/share.dart';
@@ -799,6 +800,113 @@ class _PasswordTitleTextFieldTileState
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class AuthMessageTitle extends StatelessWidget {
+  AuthMessageTitle({
+    super.key,
+    required this.size,
+    required this.subtext,
+    required this.title,
+    required this.lastText,
+  });
+
+  final Size size;
+  String title;
+  String subtext;
+  String lastText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            width: 85 * size.width / 100,
+            child: PoppinsCustText(
+              color: Colors.black,
+              size: 18.0,
+              text: title,
+              weight: FontWeight.w500,
+            ),
+          ),
+        ),
+        SizedBox(height: 2 * size.height / 100),
+        SizedBox(
+          width: 85 * size.width / 100,
+          child: PoppinsCustText(
+            color: Color(0xff8c8b90),
+            size: 14.0,
+            text: subtext,
+            weight: FontWeight.w400,
+          ),
+        ),
+        PoppinsCustText(
+          color: Color(0xff0d0d0d),
+          size: 14.0,
+          text: lastText,
+          weight: FontWeight.w400,
+        ),
+      ],
+    );
+  }
+}
+
+class OTPBoxes extends StatelessWidget {
+  const OTPBoxes({
+    super.key,
+    required this.size,
+    required this.pinController,
+  });
+
+  final Size size;
+  final TextEditingController pinController;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 8 * size.height / 100,
+      width: 16 * size.width / 100,
+      child: TextField(
+        showCursor: false,
+        controller: pinController,
+        textAlign: TextAlign.center,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(1),
+        ],
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          if (value.length == 1) {
+            FocusScope.of(context).nextFocus();
+          }
+        },
+        decoration: InputDecoration(
+          hintText: '-',
+          hintStyle: TextStyle(fontSize: 13),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: AppColors.primaryColor,
+              width: 1.0,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: Color(0xffd2d2d2),
+              width: 1.0,
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.white,
+          border: InputBorder.none,
+          contentPadding: EdgeInsets.all(12),
+        ),
       ),
     );
   }
