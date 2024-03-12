@@ -30,6 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
   // SESSION Step 1. Call SharedPreference and Initialize in init method
   late SharedPreferences prefs;
 
+  Future<void> initPref() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var mail = pref.getString('email');
+    emailController.text =
+        mail == 'null' || mail == '' || mail == null ? '' : mail;
+  }
   // SESSION Step 2
 
   TextEditingController emailController = TextEditingController();
@@ -91,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: AppColors.primaryColor,
           centerTitle: true,
           title: Text(
-            'Login',
+            'DatHub',
             style: TextStyle(
               fontSize: 18,
               color: Colors.white,
@@ -191,15 +197,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                 .loginUser(emailController.text,
                                     passwordController.text)
                                 .then(
-                              (value) {
+                              (value) async {
                                 if (value == 'success') {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          NavBar(chosenmyIndex: 0),
-                                    ),
-                                  );
+                                  isLoading = loginUserApi.getUserIsLoading;
+                                  await loginUserApi
+                                      .getUser(loginUserApi.loginUserId)
+                                      .then((value) {
+                                    if (value == 'success') {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              NavBar(chosenmyIndex: 0),
+                                        ),
+                                      );
+                                    } else {
+                                      showTopSnackBar(
+                                        Overlay.of(context),
+                                        CustomSnackBar.error(
+                                          message: loginUserApi.getUserMessage,
+                                        ),
+                                        dismissType: DismissType.onSwipe,
+                                      );
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              NavBar(chosenmyIndex: 0),
+                                        ),
+                                      );
+                                    }
+                                  });
                                 } else {
                                   showTopSnackBar(
                                     Overlay.of(context),

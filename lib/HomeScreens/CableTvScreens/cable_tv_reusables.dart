@@ -2,84 +2,100 @@
 
 import 'package:datahub/HomeScreens/DataScreens/data_reusables.dart';
 import 'package:datahub/HomeScreens/transaction_pin.dart';
-import 'package:datahub/Providers/electricty_provider.dart';
+import 'package:datahub/Providers/cable_provider.dart';
 import 'package:datahub/Utilities/app_colors.dart';
+import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../../Utilities/reusables.dart';
-
-class PrepaidPostpaidChip extends StatelessWidget {
-  PrepaidPostpaidChip({
+class CableProvidersBox extends StatelessWidget {
+  CableProvidersBox({
     super.key,
     required this.size,
-    required this.onTap,
-    required this.type,
-    required this.chipColor,
-    required this.textColor,
+    required this.colorType,
+    required this.provider,
+    required this.imgUrl,
+    required this.clicked,
+    required this.selected,
   });
 
   final Size size;
-  String type;
-  Function() onTap;
-  Color chipColor, textColor;
+  String provider, imgUrl;
+  Color colorType;
+  Function() clicked;
+  bool selected;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 5 * size.height / 100,
-        width: 18 * size.width / 100,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100),
-          color: chipColor,
-        ),
-        child: Center(
-          child: PoppinsCustText(
-            color: textColor,
-            size: 10.0,
-            text: type,
-            weight: FontWeight.w600,
-          ),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 2 * size.width / 100),
+      child: GestureDetector(
+        onTap: clicked,
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(
+                    color:
+                        selected ? AppColors.primaryColor : Colors.transparent),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: 6.5 * size.height / 100,
+                    width: 14 * size.width / 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/$imgUrl'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  HeightWidget(height: 0.3),
+                  Text(
+                    '$provider',
+                    style: GoogleFonts.aBeeZee(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            selected
+                ? Positioned(
+                    left: 10 * size.width / 100,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.green,
+                      radius: 8,
+                      child: Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 10,
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
+          ],
         ),
       ),
     );
   }
 }
 
-final List<String> electricityCompanies = [
-  "Eko Electricity - EKEDC(PHCN)",
-  "Ikeja Electricity - IKEDC(PHCN)",
-  "PortHarcourt Electricity - PHEDC",
-  "Kaduna Electricity - KAEDC",
-  "Abuja Electricity - AEDC",
-  "Ibadan Electricity - IBEDC",
-  "Kano Electricity - KEDC",
-  "Jos Electricity - JEDC",
-  "Enugu Electricity - EEDC",
-  "Benin Electricity - BEDC"
-];
-
-final List<String> electricityCodes = [
-  "01",
-  "02",
-  "03",
-  "04",
-  "05",
-  "06",
-  "07",
-  "08",
-  "09",
-  "10"
-];
-
-class ChooseElectricType {
+class ChooseCableType {
   TextEditingController searchController = TextEditingController();
   void showBottomSheet(BuildContext context) {
-    var electricApi = Provider.of<ElectricityProvider>(context, listen: false);
-
+    var cableApi = Provider.of<CableProvider>(context, listen: false);
     showModalBottomSheet(
       enableDrag: true,
       isScrollControlled: true,
@@ -122,7 +138,7 @@ class ChooseElectricType {
                         PoppinsCustText(
                           color: Colors.black,
                           size: 16.0,
-                          text: 'Choose Electricity Provider',
+                          text: 'Choose Cable Plan',
                           weight: FontWeight.w600,
                         ),
                         GestureDetector(
@@ -142,7 +158,7 @@ class ChooseElectricType {
                     HeightWidget(height: 2),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: electricityCompanies.length,
+                        itemCount: cableApi.cablePlans.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding:
@@ -150,17 +166,19 @@ class ChooseElectricType {
                             child: SheetTiles(
                               size: size,
                               onTap: () {
-                                print('pressed');
                                 Navigator.pop(context);
-                                electricApi.selectedElectricCode =
-                                    electricityCodes[index].toString();
-                                electricApi.selectedElectricPlan =
-                                    electricityCompanies[index];
-                                electricApi.electricityNotifier();
+                                cableApi.selectedCablePlan =
+                                    cableApi.cablePlans[index]['name'];
+                                cableApi.selectedCableVarCode = cableApi
+                                    .cablePlans[index]['variation_code'];
+                                cableApi.selectedCableAmount = cableApi
+                                    .cablePlans[index]['variation_amount'];
+                                cableApi.cableNotifier();
+
                                 setState(() {});
                               },
                               selected: true,
-                              type: electricityCompanies[index],
+                              type: cableApi.cablePlans[index]['name'],
                             ),
                           );
                         },
@@ -178,9 +196,19 @@ class ChooseElectricType {
   }
 }
 
-class ShowElectricSummary {
+class ShowCableSummary {
   TextEditingController searchController = TextEditingController();
-  void showBottomSheet(BuildContext context, String which) {
+  void showBottomSheet({
+    required BuildContext context,
+    required String which,
+    required String cableType,
+    required String iucNumber,
+    required String verifiedName,
+    required String plan,
+    required String amount,
+    required String userid,
+    required String phone,
+  }) {
     // var dataType = Provider.of<DataProvider>(context, listen: false);
     bool isLoading = false;
     showModalBottomSheet(
@@ -207,7 +235,7 @@ class ShowElectricSummary {
               child: Container(
                 padding: EdgeInsets.all(8),
                 width: double.infinity,
-                height: 56 * size.height / 100,
+                height: 51 * size.height / 100,
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -248,7 +276,7 @@ class ShowElectricSummary {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Service Provider',
+                            'Cable Provider',
                             style: GoogleFonts.acme(
                               textStyle: TextStyle(
                                 fontWeight: FontWeight.w400,
@@ -260,19 +288,9 @@ class ShowElectricSummary {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Container(
-                                height: 4 * size.height / 100,
-                                width: 9 * size.width / 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  image: DecorationImage(
-                                    image: AssetImage('assets/images/kaed.jpg'),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
+                              WidthWidget(width: 2),
                               Text(
-                                'KAED',
+                                cableType,
                                 style: GoogleFonts.abel(
                                   textStyle: TextStyle(
                                     fontWeight: FontWeight.w600,
@@ -287,28 +305,23 @@ class ShowElectricSummary {
                       ),
                       HeightWidget(height: 2),
                       SheetRowText(
-                        keyText: 'Phone Number',
-                        valueText: '07067581951',
-                      ),
-                      HeightWidget(height: 2),
-                      SheetRowText(
-                        keyText: 'Meter type',
-                        valueText: 'Prepaid',
-                      ),
-                      HeightWidget(height: 2),
-                      SheetRowText(
-                        keyText: 'Meter number',
-                        valueText: '998373635627',
+                        keyText: 'IUC number',
+                        valueText: iucNumber,
                       ),
                       HeightWidget(height: 2),
                       SheetRowText(
                         keyText: 'Verified name',
-                        valueText: 'Emmanuel Eze',
+                        valueText: verifiedName,
                       ),
                       HeightWidget(height: 2),
                       SheetRowText(
-                        keyText: 'Amount To Pay',
-                        valueText: 'N3,000',
+                        keyText: 'Plan',
+                        valueText: plan,
+                      ),
+                      HeightWidget(height: 2),
+                      SheetRowText(
+                        keyText: 'Amount',
+                        valueText: 'N$amount',
                       ),
                       HeightWidget(height: 8),
                       GeneralButton(
@@ -318,14 +331,21 @@ class ShowElectricSummary {
                         text: 'Proceed',
                         width: 90,
                         onPressed: () {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         TransactionPinScreen(which: which),
-                          //   ),
-                          // );
-                          // ShowDataSummary().showBottomSheet(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TransactionPinScreen(
+                                amount: amount,
+                                phone: phone,
+                                serviceid: '',
+                                userid: userid,
+                                which: which,
+                                selectedDataId: '',
+                                selectedDataPlan: '',
+                                network: '',
+                              ),
+                            ),
+                          );
                         },
                         isLoading: isLoading,
                       ),

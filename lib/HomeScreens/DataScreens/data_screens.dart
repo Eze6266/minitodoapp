@@ -5,17 +5,24 @@ import 'dart:async';
 import 'package:datahub/HomeScreens/DataScreens/data_reusables.dart';
 import 'package:datahub/HomeScreens/home_reusables.dart';
 import 'package:datahub/HomeScreens/top_up_screen.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Providers/data_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class DataScreen extends StatefulWidget {
-  const DataScreen({super.key});
-
+  DataScreen({
+    super.key,
+    required this.userid,
+  });
+  var userid;
   @override
   State<DataScreen> createState() => _DataScreenState();
 }
@@ -28,11 +35,23 @@ class _DataScreenState extends State<DataScreen>
   bool glo = false;
   bool etisalat = false;
   bool isLoading = false;
+  bool phoneError = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DataProvider>(context, listen: false).getAllData('');
+      Provider.of<DataProvider>(context, listen: false).selectedDataPlan = '';
+      // Add Your Code here.
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var dataType = Provider.of<DataProvider>(context);
+    var authApi = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -83,25 +102,7 @@ class _DataScreenState extends State<DataScreen>
           child: Column(
             children: [
               HeightWidget(height: 2),
-              Center(
-                child: Shimmer.fromColors(
-                  period: Duration(seconds: 3),
-                  baseColor: Colors.red,
-                  highlightColor: Color(0xffFFD700),
-                  child: Text(
-                    'LOAD DATA BUNDLE',
-                    style: GoogleFonts.acme(
-                      textStyle: TextStyle(
-                        color: Color(0xffFFD700),
-                        // color: Color.fromARGB(255, 198, 204, 213),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              HeightWidget(height: 4),
+
               Padding(
                 padding: EdgeInsets.only(left: 2 * size.width / 100),
                 child: Align(
@@ -135,6 +136,8 @@ class _DataScreenState extends State<DataScreen>
                           airtel = false;
                           glo = false;
                           etisalat = false;
+                          dataType.selectedDataPlan = '';
+                          dataType.getAllData('mtn');
                         });
                       },
                       selected: mtn,
@@ -150,6 +153,8 @@ class _DataScreenState extends State<DataScreen>
                           airtel = true;
                           glo = false;
                           etisalat = false;
+                          dataType.selectedDataPlan = '';
+                          dataType.getAllData('airtel');
                         });
                       },
                       selected: airtel,
@@ -165,6 +170,8 @@ class _DataScreenState extends State<DataScreen>
                           airtel = false;
                           glo = true;
                           etisalat = false;
+                          dataType.selectedDataPlan = '';
+                          dataType.getAllData('glo');
                         });
                       },
                       selected: glo,
@@ -180,6 +187,8 @@ class _DataScreenState extends State<DataScreen>
                           airtel = false;
                           glo = false;
                           etisalat = true;
+                          dataType.selectedDataPlan = '';
+                          dataType.getAllData('9mobile');
                         });
                       },
                       selected: etisalat,
@@ -199,36 +208,57 @@ class _DataScreenState extends State<DataScreen>
                   title: 'Phone Number',
                   keyboardtype: TextInputType.number,
                   isloading: isLoading,
+                  onChanged: (value) {
+                    if (value.length < 11) {
+                      setState(() {
+                        phoneError = true;
+                      });
+                    } else {
+                      setState(() {
+                        phoneError = false;
+                      });
+                    }
+                  },
                 ),
               ),
-              HeightWidget(height: 2),
-              DropdownAndTitle(
-                size: size,
-                text: dataType.seldataType == 1
-                    ? 'SME'
-                    : dataType.seldataType == 2
-                        ? 'Normal Data'
-                        : dataType.seldataType == 3
-                            ? 'Enterprise Data'
-                            : 'Select Data Type',
-                title: 'Choose Data Type',
-                onTap: () {
-                  ChooseDataType().showBottomSheet(context);
-                },
-              ),
+              // HeightWidget(height: 2),
+              // DropdownAndTitle(
+              //   size: size,
+              //   text: dataType.seldataType == 1
+              //       ? 'SME'
+              //       : dataType.seldataType == 2
+              //           ? 'Normal Data'
+              //           : dataType.seldataType == 3
+              //               ? 'Enterprise Data'
+              //               : 'Select Data Type',
+              //   title: 'Choose Data Type',
+              //   onTap: () {
+              //     ChooseDataType().showBottomSheet(context);
+              //   },
+              // ),
+
               HeightWidget(height: 3),
               DropdownAndTitle(
                 size: size,
-                text: dataType.seldataPlan == 1
-                    ? 'N200 200MB - 3 days'
-                    : dataType.seldataPlan == 2
-                        ? 'N2,000 4GB - 30 days'
-                        : dataType.seldataPlan == 3
-                            ? 'N2,500 6GB - 30 days'
-                            : 'Select Data Plan',
+                text: dataType.selectedDataPlan == ''
+                    ? 'Select Plan'
+                    : dataType.selectedDataPlan,
                 title: 'Choose Data Plan',
                 onTap: () {
-                  ChooseDataPlan().showBottomSheet(context);
+                  mtn == false &&
+                          airtel == false &&
+                          glo == false &&
+                          etisalat == false
+                      ? showTopSnackBar(
+                          Overlay.of(context),
+                          CustomSnackBar.error(
+                            message: 'select a network',
+                          ),
+                          dismissType: DismissType.onSwipe,
+                        )
+                      : dataType.dataPlans.isEmpty
+                          ? showToast()
+                          : ChooseDataPlan().showBottomSheet(context);
                 },
               ),
               HeightWidget(height: 0.3),
@@ -236,32 +266,7 @@ class _DataScreenState extends State<DataScreen>
                 padding: EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
                 child: BalanceAndFundRow(),
               ),
-              HeightWidget(height: 6),
-              Center(
-                child: PoppinsCustText(
-                  color: Colors.black,
-                  size: 14.0,
-                  text: 'TOTAL AMOUNT ',
-                  weight: FontWeight.w500,
-                ),
-              ),
-              HeightWidget(height: 0.5),
-              Container(
-                height: 7 * size.height / 100,
-                width: 90 * size.width / 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Color.fromARGB(255, 216, 215, 215),
-                ),
-                child: Center(
-                  child: PoppinsCustText(
-                    color: Colors.black,
-                    size: 20.0,
-                    text: 'N2,500',
-                    weight: FontWeight.w600,
-                  ),
-                ),
-              ),
+
               HeightWidget(height: 10),
             ],
           ),
@@ -274,11 +279,63 @@ class _DataScreenState extends State<DataScreen>
         text: 'Continue',
         width: 90,
         onPressed: () {
-          ShowDataSummary().showBottomSheet(context, '2');
+          if (airtel == false &&
+              mtn == false &&
+              glo == false &&
+              etisalat == false) {
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(
+                message: 'Select network',
+              ),
+              dismissType: DismissType.onSwipe,
+            );
+          } else {
+            if (phoneController.text.isEmpty || phoneError) {
+              showTopSnackBar(
+                Overlay.of(context),
+                CustomSnackBar.error(
+                  message: 'Enter a valid number',
+                ),
+                dismissType: DismissType.onSwipe,
+              );
+            } else {
+              ShowDataSummary().showBottomSheet(
+                context: context,
+                which: '2',
+                phone: phoneController.text,
+                userid: authApi.loginUserId,
+                price: dataType.selectedDataPrice,
+                selectedDataPlan: dataType.selectedDataPlan,
+                selectedDataId: dataType.selectedDataId,
+                network: mtn
+                    ? '01'
+                    : glo
+                        ? '02'
+                        : airtel
+                            ? '03'
+                            : '04',
+              );
+            }
+          }
         },
         isLoading: isLoading,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+
+  void showToast() {
+    Fluttertoast.showToast(
+      msg: 'Fetching data plans',
+      toastLength: Toast
+          .LENGTH_SHORT, // Duration for which the toast should be displayed
+      gravity: ToastGravity.BOTTOM, // Position of the toast message
+      timeInSecForIosWeb:
+          1, // Time duration in seconds for which the message should be displayed
+      backgroundColor: Colors.black54, // Background color of the toast message
+      textColor: Colors.white, // Text color of the toast message
+      fontSize: 16.0, // Font size of the toast message
     );
   }
 }

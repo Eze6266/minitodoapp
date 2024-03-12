@@ -1,16 +1,37 @@
-// ignore_for_file: prefer_final_fields, prefer_const_constructors
-
-import 'dart:ui';
+// ignore_for_file: prefer_final_fields, prefer_const_constructors, unnecessary_string_interpolations
 
 import 'package:confetti/confetti.dart';
+import 'package:datahub/HomeScreens/succes_page.dart';
+import 'package:datahub/Providers/data_providers.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../../../Utilities/app_colors.dart';
 
 class TransactionPinScreen extends StatefulWidget {
-  TransactionPinScreen({super.key, required this.which});
-  var which;
+  TransactionPinScreen({
+    super.key,
+    required this.which,
+    required this.amount,
+    required this.phone,
+    required this.serviceid,
+    required this.userid,
+    required this.network,
+    required this.selectedDataId,
+    required this.selectedDataPlan,
+  });
+
+  var which,
+      userid,
+      serviceid,
+      phone,
+      amount,
+      network,
+      selectedDataId,
+      selectedDataPlan;
   @override
   State<TransactionPinScreen> createState() => _TransactionPinScreenState();
 }
@@ -68,6 +89,10 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var airtimeProvider = Provider.of<DataProvider>(context);
+    isLoading = widget.which == '1'
+        ? Provider.of<DataProvider>(context).buyAirtimeIsLoading
+        : Provider.of<DataProvider>(context).buyDataIsLoading;
     confetticontroller.play();
     return SafeArea(
       child: Scaffold(
@@ -194,31 +219,79 @@ class _TransactionPinScreenState extends State<TransactionPinScreen> {
                 width: 85,
                 onPressed: () async {
                   if (areAllFieldsFilled()) {
-                    showDialog(
-                      barrierDismissible: false,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          child: AlertDialog(
-                            titlePadding: EdgeInsets.zero,
-                            insetPadding: EdgeInsets.zero,
-                            contentPadding: EdgeInsets.zero,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            backgroundColor: Colors.white,
-                            title: SuccessPopupCard(
-                              size: size,
-                              confetticontroller: confetticontroller,
-                              textcontent: widget.which == '1'
-                                  ? 'You have Successfully recharged N400 Airtime to 07067581951. Cost NGN420.\nThank you for using DATAHUB'
-                                  : widget.which == '2'
-                                      ? 'You have Successfully sent 10GB of Data for 30 days to 07067581951. Cost NGN3,000.\nThank you for using DATAHUB'
-                                      : 'You have Successfully Bought Electricity for 23322233222. Cost NGN5,000\nThank you for using DATAHUB',
+                    if (widget.which == '1') {
+                      await airtimeProvider
+                          .buyAirtime(
+                        userid: widget.userid,
+                        serviceID: widget.serviceid,
+                        phoneNumber: widget.phone,
+                        amount: widget.amount,
+                        pin: getPin(),
+                      )
+                          .then((value) {
+                        if (value == 'success') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SuccessPage(
+                                which: widget.which,
+                                airtime: widget.network,
+                                cost: widget.amount,
+                                number: widget.phone,
+                                selectedDataPlan: widget.selectedDataPlan,
+                                cablePlan: '',
+                                iucNumber: '',
+                                meterNumber: '',
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
+                          );
+                        } else {
+                          showTopSnackBar(
+                            Overlay.of(context),
+                            CustomSnackBar.error(
+                              message: '${airtimeProvider.buyAirtimeMessage}',
+                            ),
+                            dismissType: DismissType.onSwipe,
+                          );
+                        }
+                      });
+                    } else if (widget.which == '2') {
+                      await airtimeProvider
+                          .buyData(
+                        userid: widget.userid,
+                        network: widget.network,
+                        phoneNumber: widget.phone,
+                        dataplan: widget.selectedDataId,
+                        pin: getPin(),
+                      )
+                          .then((value) {
+                        if (value == 'success') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SuccessPage(
+                                which: widget.which,
+                                airtime: widget.network,
+                                cost: widget.amount,
+                                number: widget.phone,
+                                selectedDataPlan: widget.selectedDataPlan,
+                                cablePlan: '',
+                                iucNumber: '',
+                                meterNumber: '',
+                              ),
+                            ),
+                          );
+                        } else {
+                          showTopSnackBar(
+                            Overlay.of(context),
+                            CustomSnackBar.error(
+                              message: '${airtimeProvider.buyDataMessage}',
+                            ),
+                            dismissType: DismissType.onSwipe,
+                          );
+                        }
+                      });
+                    }
                   } else {}
                 },
                 isLoading: isLoading,

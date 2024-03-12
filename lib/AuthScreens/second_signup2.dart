@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:datahub/AuthScreens/login_screen.dart';
 import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
@@ -53,6 +54,8 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
   }
 
   TextEditingController emailController = TextEditingController();
+  TextEditingController pinController = TextEditingController();
+  TextEditingController bvnController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmpasswordController = TextEditingController();
   bool isPasswordVisible = false;
@@ -80,6 +83,7 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
   bool emailError = false;
   bool pwdError = false;
   bool pwdConfrmErroe = false;
+  bool bvnError = false;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -105,7 +109,7 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
         ),
         centerTitle: true,
         title: Text(
-          'Sign Up',
+          'Verification',
           style: TextStyle(
             fontSize: 18,
             color: Colors.white,
@@ -174,25 +178,29 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                       )
                     : SizedBox.shrink(),
                 SizedBox(height: 3 * size.height / 100),
-                PasswordTitleTextFieldTile(
-                  hint: 'Type your password',
-                  isPasswordVisible: isPasswordVisible,
-                  size: size,
-                  whichController: passwordController,
-                  title: 'Password',
-                  keyboardtype: TextInputType.text,
-                  onChanged: (value) {
-                    if (value.length < 6) {
-                      setState(() {
-                        pwdError = true;
-                      });
-                    } else {
-                      setState(() {
-                        pwdError = false;
-                        checkPasswordsMatch();
-                      });
-                    }
-                  },
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+                  child: PasswordTitleTextFieldTile(
+                    hint: 'Type your password',
+                    isPasswordVisible: isPasswordVisible,
+                    size: size,
+                    whichController: passwordController,
+                    title: 'Password',
+                    keyboardtype: TextInputType.text,
+                    onChanged: (value) {
+                      if (value.length < 6) {
+                        setState(() {
+                          pwdError = true;
+                        });
+                      } else {
+                        setState(() {
+                          pwdError = false;
+                          checkPasswordsMatch();
+                        });
+                      }
+                    },
+                  ),
                 ),
                 pwdError
                     ? Padding(
@@ -210,25 +218,29 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                       )
                     : SizedBox.shrink(),
                 SizedBox(height: 3 * size.height / 100),
-                PasswordTitleTextFieldTile(
-                  hint: 'Confirm your password',
-                  isPasswordVisible: isConfirmPasswordVisible,
-                  size: size,
-                  whichController: confirmpasswordController,
-                  title: 'Confirm Password',
-                  keyboardtype: TextInputType.text,
-                  onChanged: (value) {
-                    if (value.length < 6) {
-                      setState(() {
-                        pwdConfrmErroe = true;
-                      });
-                    } else {
-                      setState(() {
-                        pwdConfrmErroe = false;
-                        checkPasswordsMatch();
-                      });
-                    }
-                  },
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+                  child: PasswordTitleTextFieldTile(
+                    hint: 'Confirm your password',
+                    isPasswordVisible: isConfirmPasswordVisible,
+                    size: size,
+                    whichController: confirmpasswordController,
+                    title: 'Confirm Password',
+                    keyboardtype: TextInputType.text,
+                    onChanged: (value) {
+                      if (value.length < 6) {
+                        setState(() {
+                          pwdConfrmErroe = true;
+                        });
+                      } else {
+                        setState(() {
+                          pwdConfrmErroe = false;
+                          checkPasswordsMatch();
+                        });
+                      }
+                    },
+                  ),
                 ),
                 pwdConfrmErroe
                     ? Padding(
@@ -245,7 +257,114 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                         ),
                       )
                     : SizedBox.shrink(),
-                SizedBox(height: 6 * size.height / 100),
+                SizedBox(height: 3 * size.height / 100),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+                  child: TitleTextFieldTile(
+                    size: size,
+                    whichController: bvnController,
+                    hint: 'Enter a valid BVN',
+                    title: 'BVN',
+                    keyboardtype: TextInputType.number,
+                    isloading: isLoading,
+                    onChanged: (value) {
+                      if (value.length < 11) {
+                        setState(() {
+                          bvnError = false;
+                        });
+                      } else {
+                        setState(() {
+                          bvnError = true;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                bvnError
+                    ? Padding(
+                        padding: EdgeInsets.only(left: 3 * size.width / 100),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'BVN must be an 11 digit number',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      )
+                    : SizedBox.shrink(),
+                SizedBox(height: 3 * size.height / 100),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 3 * size.width / 100),
+                  child: SizedBox(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 1 * size.width / 100),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: PoppinsCustText(
+                              color: Colors.black,
+                              size: 12.0,
+                              text: 'Set Pin',
+                              weight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 0.5 * size.height / 100),
+                        SizedBox(
+                          width: 90 * size.width / 100,
+                          height: 7 * size.height / 100,
+                          child: TextFormField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(4),
+                            ],
+                            onChanged: (onChanged) {},
+                            enabled: isLoading ? false : true,
+                            showCursor: true,
+                            cursorColor: Colors.grey,
+                            controller: pinController,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              fillColor: Color(0xfff8f8f8),
+                              filled: true,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xff92a4b5),
+                                  width: 0.5,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(),
+                              ),
+                              hintText: 'Enter a 4 digit pin',
+                              hintStyle: TextStyle(
+                                color: Color(0xffc2c4cf),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Color(0xff92a4b5),
+                                  width: 0.5,
+                                ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5 * size.height / 100),
                 GeneralButton(
                   size: size,
                   buttonColor: pwdError ||
@@ -259,34 +378,51 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                   height: 7,
                   text: 'Sign Up',
                   width: 90,
-                  onPressed:
-                      pwdError || pwdConfrmErroe || emailController.text.isEmpty
-                          ? () {}
-                          : () async {
-                              if (confirmtext == 'true') {
+                  onPressed: pwdError ||
+                          pwdConfrmErroe ||
+                          emailController.text.isEmpty ||
+                          bvnController.text.isEmpty ||
+                          bvnError
+                      ? () {}
+                      : () async {
+                          if (confirmtext == 'true') {
+                            await regUserApi
+                                .registerUser(
+                              username: widget.firstName,
+                              firstName: widget.firstName,
+                              lastName: widget.lastName,
+                              phone: widget.phone,
+                              email: emailController.text,
+                              password: passwordController.text,
+                            )
+                                .then((value) async {
+                              if (value == 'success') {
+                                isLoading = regUserApi.getAccNumIsLoading;
                                 await regUserApi
-                                    .registerUser(
-                                  username: widget.firstName,
-                                  firstName: widget.firstName,
-                                  lastName: widget.lastName,
-                                  phone: widget.phone,
-                                  email: emailController.text,
-                                  password: passwordController.text,
-                                )
-                                    .then((value) {
+                                    .getAccNum(regUserApi.regUserId,
+                                        bvnController.text)
+                                    .then((value) async {
                                   if (value == 'success') {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            NavBar(chosenmyIndex: 0),
-                                      ),
-                                    );
+                                    await regUserApi
+                                        .setUserPin(regUserApi.regUserId,
+                                            pinController.text)
+                                        .then((value) {
+                                      if (value == 'success') {
+                                        isLoading =
+                                            regUserApi.setUserPinIsLoading;
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => LoginScreen(),
+                                          ),
+                                        );
+                                      } else {}
+                                    });
                                   } else {
                                     showTopSnackBar(
                                       Overlay.of(context),
                                       CustomSnackBar.error(
-                                        message: regUserApi.regUserMessage,
+                                        message: regUserApi.getAccNumMessage,
                                       ),
                                       dismissType: DismissType.onSwipe,
                                     );
@@ -296,13 +432,58 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                                 showTopSnackBar(
                                   Overlay.of(context),
                                   CustomSnackBar.error(
-                                    message: 'Passwords don\'t match',
+                                    message: regUserApi.regUserMessage,
                                   ),
                                   dismissType: DismissType.onSwipe,
                                 );
                               }
-                            },
+                            });
+                          } else {
+                            showTopSnackBar(
+                              Overlay.of(context),
+                              CustomSnackBar.error(
+                                message: 'Passwords don\'t match',
+                              ),
+                              dismissType: DismissType.onSwipe,
+                            );
+                          }
+                        },
                   isLoading: isLoading,
+                ),
+                HeightWidget(height: 2),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  // height: 7 * size.height / 100,
+                  width: 95 * size.width / 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.blue.shade100,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.lightbulb,
+                        color: const Color.fromARGB(255, 199, 120, 2),
+                      ),
+                      WidthWidget(width: 1),
+                      SizedBox(
+                        width: 80 * size.width / 100,
+                        child: Text(
+                          'Due to CBN regulations, all users are required to input their bvn for verification and creation of their dedicated account numbers',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 4,
+                          softWrap: true,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 10),
               ],

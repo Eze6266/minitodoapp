@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations, use_build_context_synchronously
 
 import 'package:datahub/HomeScreens/BuyAirtimeScreens/airtime_screen.dart';
 import 'package:datahub/HomeScreens/CableTvScreens/cable_tv_screen.dart';
@@ -7,6 +7,7 @@ import 'package:datahub/HomeScreens/ElectrictyScreens/electricity_screen.dart';
 import 'package:datahub/HomeScreens/NotificationScreens/notification_screen.dart';
 import 'package:datahub/HomeScreens/home_reusables.dart';
 import 'package:datahub/HomeScreens/top_up_screen.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/TransactionsScreens/transactions_screen.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
@@ -14,6 +15,8 @@ import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:text_scroll/text_scroll.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -81,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     getGreeting();
     Size size = MediaQuery.of(context).size;
+    var authApi = Provider.of<AuthProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.bgColor,
@@ -95,11 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        backgroundColor: Color(0xfffbbc05),
-                        radius: 20,
-                        backgroundImage: AssetImage('assets/images/avatar.png'),
-                      ),
+                      // CircleAvatar(
+                      //   backgroundColor: Color(0xfffbbc05),
+                      //   radius: 20,
+                      //   backgroundImage: AssetImage('assets/images/avatar.png'),
+                      // ),
                       WidthWidget(width: 1),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -108,42 +112,45 @@ class _HomeScreenState extends State<HomeScreen> {
                           PoppinsCustText(
                             color: Colors.black,
                             size: 14.0,
-                            text: '$greeting Manuel',
+                            text: '$greeting ${authApi.userName ?? ''}',
                             weight: FontWeight.w400,
                           ),
                           HeightWidget(height: 0.3),
                           PoppinsCustText(
                             color: Color(0xff8c8b90),
                             size: 10.0,
-                            text: 'What do you want to do today?',
+                            text: 'Welcome to DataHub',
                             weight: FontWeight.w400,
                           ),
                         ],
                       ),
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NotificationScreen(),
-                        ),
-                      );
-                    },
-                    child: FaIcon(
-                      FontAwesomeIcons.bell,
-                      size: 20,
-                      color: Colors.black,
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //         builder: (context) => NotificationScreen(),
+                  //       ),
+                  //     );
+                  //   },
+                  //   child: FaIcon(
+                  //     FontAwesomeIcons.bell,
+                  //     size: 20,
+                  //     color: Colors.black,
+                  //   ),
+                  // ),
                 ],
               ),
               HeightWidget(height: 2),
               HomeWalletCard(
                 size: size,
                 eye: eye,
-                balance: '450,000',
+                balance: authApi.balance.toString() == '0' ||
+                        authApi.balance.toString() == 'null'
+                    ? '0'
+                    : authApi.balance.toString(),
                 onTap: () {
                   setState(() {
                     eye = !eye;
@@ -211,11 +218,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           iconType: Icons.wifi,
                           boxColor: Colors.green.shade100,
                           iconColor: Colors.green,
-                          onTap: () {
+                          onTap: () async {
+                            SharedPreferences pref =
+                                await SharedPreferences.getInstance();
+                            var userid = pref.getString('userid');
+                            print(userid);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => DataScreen(),
+                                builder: (context) => DataScreen(
+                                  userid: userid,
+                                ),
                               ),
                             );
                           },
@@ -256,22 +269,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                         ),
-                        ServicesBoxes(
-                          size: size,
-                          service: 'Bulk SMS',
-                          iconType: Icons.contact_mail_outlined,
-                          boxColor: Colors.indigo.shade100,
-                          iconColor: Colors.indigo,
-                          onTap: () {},
+                        Container(
+                          height: 9 * size.height / 100,
+                          width: 24 * size.width / 100,
                         ),
-                        ServicesBoxes(
-                          size: size,
-                          service: 'Gift Cards',
-                          iconType: Icons.request_quote_outlined,
-                          boxColor: Colors.brown.shade100,
-                          iconColor: Colors.brown,
-                          onTap: () {},
+                        // ServicesBoxes(
+                        //   size: size,
+                        //   service: 'Bulk SMS',
+                        //   iconType: Icons.contact_mail_outlined,
+                        //   boxColor: Colors.indigo.shade100,
+                        //   iconColor: Colors.indigo,
+                        //   onTap: () {},
+                        // ),
+                        Container(
+                          height: 9 * size.height / 100,
+                          width: 24 * size.width / 100,
                         ),
+                        // ServicesBoxes(
+                        //   size: size,
+                        //   service: 'Gift Cards',
+                        //   iconType: Icons.request_quote_outlined,
+                        //   boxColor: Colors.brown.shade100,
+                        //   iconColor: Colors.brown,
+                        //   onTap: () {},
+                        // ),
                       ],
                     ),
                   ],

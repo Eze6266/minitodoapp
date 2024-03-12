@@ -2,10 +2,13 @@
 
 import 'package:datahub/HomeScreens/DataScreens/data_reusables.dart';
 import 'package:datahub/HomeScreens/ElectrictyScreens/electricty_reusables.dart';
+import 'package:datahub/Providers/auth_providers.dart';
+import 'package:datahub/Providers/electricty_provider.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ElectricityScreen extends StatefulWidget {
@@ -23,10 +26,23 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
   bool prepaid = true;
   bool postpaid = false;
   bool isLoading = false;
+  bool verificationLoading = false;
   bool idVerified = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Provider.of<ElectricityProvider>(context, listen: false)
+        .selectedElectricPlan = '';
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var electricApi = Provider.of<ElectricityProvider>(context);
+    var authApi = Provider.of<AuthProvider>(context);
+    verificationLoading =
+        Provider.of<ElectricityProvider>(context).verifyMeterisLoading;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -79,7 +95,9 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
               HeightWidget(height: 4),
               DropdownAndTitle(
                 size: size,
-                text: 'Select Electricity Type',
+                text: electricApi.selectedElectricPlan == ''
+                    ? 'Select Electricity Type'
+                    : electricApi.selectedElectricPlan,
                 title: 'Select Provider',
                 onTap: () {
                   ChooseElectricType().showBottomSheet(context);
@@ -170,13 +188,21 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
               ),
               HeightWidget(height: 0.5),
               VerificationRow(
+                isLoading: verificationLoading,
                 size: size,
                 idVerified: idVerified,
-                onTap: () {
-                  setState(() {
-                    idVerified = true;
-                    verifiedNameController.text = 'Emmanuel Ezejiobi';
-                  });
+                onTap: () async {
+                  await electricApi.verifyMeterNumber(
+                    serviceID: electricApi.selectedElectricCode,
+                    meterNumber: meterController.text,
+                    type: prepaid ? 'prepaid' : 'postpaid',
+                    token: authApi.loginUserId,
+                  );
+
+                  // setState(() {
+                  //   idVerified = true;
+                  //   verifiedNameController.text = 'Emmanuel Ezejiobi';
+                  // });
                 },
               ),
               HeightWidget(height: 3),

@@ -227,7 +227,7 @@ class ChooseDataType {
                         dataType.callDataNotifier();
                         setState(() {});
                       },
-                      selected: dataType.seldataType == 1 ? true : false,
+                      selected: false,
                       type: 'SME',
                     ),
                     HeightWidget(height: 1),
@@ -285,34 +285,42 @@ class SheetTiles extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 1 * size.width / 100),
+        padding: EdgeInsets.symmetric(horizontal: 2 * size.width / 100),
         height: 7 * size.height / 100,
         width: 100 * size.width / 100,
         color: const Color.fromARGB(255, 238, 236, 236),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            PoppinsCustText(
-              color: Colors.black,
-              size: 14.0,
-              text: '$type',
-              weight: FontWeight.w400,
-            ),
-            Container(
-              height: 2 * size.height / 100,
-              width: 4 * size.width / 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: AppColors.primaryColor),
+            SizedBox(
+              width: 86 * size.width / 100,
+              child: Text(
+                type,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
               ),
-              child: selected
-                  ? Icon(
-                      Icons.check,
-                      size: 12,
-                      color: AppColors.primaryColor,
-                    )
-                  : SizedBox.shrink(),
             ),
+            // Container(
+            //   height: 2 * size.height / 100,
+            //   width: 4 * size.width / 100,
+            //   decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(100),
+            //     border: Border.all(color: AppColors.primaryColor),
+            //   ),
+            //   child: selected
+            //       ? Icon(
+            //           Icons.check,
+            //           size: 12,
+            //           color: AppColors.primaryColor,
+            //         )
+            //       : SizedBox.shrink(),
+            // ),
           ],
         ),
       ),
@@ -324,6 +332,29 @@ class ChooseDataPlan {
   TextEditingController searchController = TextEditingController();
   void showBottomSheet(BuildContext context) {
     var dataType = Provider.of<DataProvider>(context, listen: false);
+    String extractNumericString(String input) {
+      // Remove "NGN" prefix and any leading/trailing whitespace
+      String numericString = input.replaceAll('NGN', '').trim();
+
+      // Return the extracted numeric string
+      return numericString;
+    }
+
+    String roundString(String numberString, {int decimalPlaces = 0}) {
+      try {
+        double number = double.parse(numberString);
+        if (decimalPlaces < 0) {
+          throw FormatException("Decimal places can't be negative");
+        }
+        if (decimalPlaces == 0) {
+          return number.round().toString();
+        } else {
+          return number.toStringAsFixed(decimalPlaces);
+        }
+      } catch (e) {
+        return "Invalid input";
+      }
+    }
 
     showModalBottomSheet(
       enableDrag: true,
@@ -337,7 +368,7 @@ class ChooseDataPlan {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
             return Container(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
@@ -347,9 +378,9 @@ class ChooseDataPlan {
               ),
               // height: 80 * size.height / 100,
               child: Container(
-                padding: EdgeInsets.all(8),
+                padding: EdgeInsets.all(5),
                 width: double.infinity,
-                height: 60 * size.height / 100,
+                height: 70 * size.height / 100,
                 child: Column(
                   children: [
                     Container(
@@ -384,44 +415,39 @@ class ChooseDataPlan {
                     ),
                     HeightWidget(height: 1.5),
                     Divider(),
-                    HeightWidget(height: 2),
-                    SheetTiles(
-                      size: size,
-                      onTap: () {
-                        print('pressed');
-                        Navigator.pop(context);
-                        dataType.seldataPlan = 1;
-                        dataType.callDataNotifier();
-                        setState(() {});
-                      },
-                      selected: dataType.seldataPlan == 1 ? true : false,
-                      type: 'N200 200MB - 3 days',
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: dataType.dataPlans.length,
+                        itemBuilder: (context, index) {
+                          final dataPlan = dataType.dataPlans[index];
+                          return Padding(
+                            padding:
+                                EdgeInsets.only(bottom: 1 * size.height / 100),
+                            child: SheetTiles(
+                                size: size,
+                                onTap: () {
+                                  print(dataPlan.id);
+                                  Navigator.pop(context);
+                                  dataType.selectedDataPlan =
+                                      '${dataPlan.description.split(' - ')[0]} - N${roundString((dataPlan.price * 1.12).toString(), decimalPlaces: 0)} 30days';
+                                  dataType.selectedDataId =
+                                      dataPlan.id.toString();
+                                  dataType.selectedDataPrice = roundString(
+                                      (dataPlan.price * 1.12).toString(),
+                                      decimalPlaces: 0);
+                                  dataType.callDataNotifier();
+                                  // setState(() {});
+                                },
+                                selected: false,
+                                type:
+                                    '${dataPlan.description.split(' - ')[0]} - N${roundString((dataPlan.price * 1.12).toStringAsFixed(2), decimalPlaces: 0)} 30days'
+                                // '${dataType.dataPlans[index]['name']} ${dataType.dataPlans[index]['amount']} - (${dataType.dataPlans[index]['type']})',
+                                ),
+                          );
+                        },
+                      ),
                     ),
-                    HeightWidget(height: 1),
-                    SheetTiles(
-                      size: size,
-                      onTap: () {
-                        Navigator.pop(context);
-                        dataType.seldataPlan = 2;
-                        dataType.callDataNotifier();
-                        setState(() {});
-                      },
-                      type: 'N2,000 4GB - 30 days',
-                      selected: dataType.seldataPlan == 2 ? true : false,
-                    ),
-                    HeightWidget(height: 1),
-                    SheetTiles(
-                      size: size,
-                      onTap: () {
-                        Navigator.pop(context);
-                        dataType.seldataPlan = 3;
-                        dataType.callDataNotifier();
-                        setState(() {});
-                      },
-                      type: 'N2,500 6GB - 30 days',
-                      selected: dataType.seldataPlan == 3 ? true : false,
-                    ),
-                    HeightWidget(height: 2),
+                    HeightWidget(height: 0.3),
                   ],
                 ),
               ),
@@ -435,8 +461,29 @@ class ChooseDataPlan {
 
 class ShowDataSummary {
   TextEditingController searchController = TextEditingController();
-  void showBottomSheet(BuildContext context, String which) {
+  void showBottomSheet({
+    required String userid,
+    required String selectedDataId,
+    required BuildContext context,
+    required String which,
+    required String price,
+    required String network,
+    required String phone,
+    required String selectedDataPlan,
+  }) {
     var dataType = Provider.of<DataProvider>(context, listen: false);
+    String addCommasToNumber(String numberString) {
+      String reversedString = numberString.split('').reversed.join();
+      String result = '';
+      for (int i = 0; i < reversedString.length; i++) {
+        result += reversedString[i];
+        if ((i + 1) % 3 == 0 && i != reversedString.length - 1) {
+          result += ',';
+        }
+      }
+      return result.split('').reversed.join();
+    }
+
     bool isLoading = false;
     showModalBottomSheet(
       enableDrag: true,
@@ -462,7 +509,7 @@ class ShowDataSummary {
               child: Container(
                 padding: EdgeInsets.all(8),
                 width: double.infinity,
-                height: 53 * size.height / 100,
+                height: 48 * size.height / 100,
                 child: Column(
                   children: [
                     Container(
@@ -514,19 +561,14 @@ class ShowDataSummary {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Container(
-                              height: 4 * size.height / 100,
-                              width: 9 * size.width / 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/mtn.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
                             Text(
-                              'MTN',
+                              network == '01'
+                                  ? 'MTN'
+                                  : network == '02'
+                                      ? 'GLO'
+                                      : network == '03'
+                                          ? 'AIRTEL'
+                                          : '9MOBILE',
                               style: GoogleFonts.abel(
                                 textStyle: TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -542,22 +584,17 @@ class ShowDataSummary {
                     HeightWidget(height: 2),
                     SheetRowText(
                       keyText: 'Phone Number',
-                      valueText: '07067581951',
-                    ),
-                    HeightWidget(height: 2),
-                    SheetRowText(
-                      keyText: 'Data Type',
-                      valueText: 'SME',
+                      valueText: '$phone',
                     ),
                     HeightWidget(height: 2),
                     SheetRowText(
                       keyText: 'Data Plan',
-                      valueText: '10GB 30days',
+                      valueText: '$selectedDataPlan',
                     ),
                     HeightWidget(height: 2),
                     SheetRowText(
                       keyText: 'Amount To Pay',
-                      valueText: 'N3,000',
+                      valueText: 'N${addCommasToNumber(price)}',
                     ),
                     HeightWidget(height: 8),
                     GeneralButton(
@@ -570,15 +607,22 @@ class ShowDataSummary {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                TransactionPinScreen(which: which),
+                            builder: (context) => TransactionPinScreen(
+                              which: which,
+                              amount: price,
+                              phone: phone,
+                              serviceid: '',
+                              userid: userid,
+                              network: network,
+                              selectedDataId: selectedDataId,
+                              selectedDataPlan: selectedDataPlan,
+                            ),
                           ),
                         );
-                        // ShowDataSummary().showBottomSheet(context);
                       },
                       isLoading: isLoading,
                     ),
-                    HeightWidget(height: 2),
+                    HeightWidget(height: 1),
                   ],
                 ),
               ),
@@ -613,14 +657,20 @@ class SheetRowText extends StatelessWidget {
             ),
           ),
         ),
-        Text(
-          '$valueText',
-          style: GoogleFonts.abel(
-            textStyle: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
-              color: Colors.black,
+        SizedBox(
+          width: 66 * size.width / 100,
+          child: Text(
+            '$valueText',
+            style: GoogleFonts.abel(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: Colors.black,
+              ),
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.right,
           ),
         ),
       ],

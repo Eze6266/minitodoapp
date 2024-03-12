@@ -9,7 +9,15 @@ import 'package:google_fonts/google_fonts.dart';
 
 class ShowAirtimeSummary {
   TextEditingController searchController = TextEditingController();
-  void showBottomSheet(BuildContext context, String which) {
+  void showBottomSheet({
+    required BuildContext context,
+    required String which,
+    required String number,
+    required String network,
+    required String amount,
+    required String amountToPay,
+    required String userid,
+  }) {
     bool isLoading = false;
     showModalBottomSheet(
       enableDrag: true,
@@ -35,7 +43,7 @@ class ShowAirtimeSummary {
               child: Container(
                 padding: EdgeInsets.all(8),
                 width: double.infinity,
-                height: 48 * size.height / 100,
+                height: 43 * size.height / 100,
                 child: Column(
                   children: [
                     Container(
@@ -87,19 +95,14 @@ class ShowAirtimeSummary {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Container(
-                              height: 4 * size.height / 100,
-                              width: 9 * size.width / 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                image: DecorationImage(
-                                  image: AssetImage('assets/images/mtn.png'),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
                             Text(
-                              'MTN',
+                              network == '01'
+                                  ? 'MTN'
+                                  : network == '02'
+                                      ? 'Glo'
+                                      : network == '03'
+                                          ? 'Airtel'
+                                          : 'Etisalat',
                               style: GoogleFonts.abel(
                                 textStyle: TextStyle(
                                   fontWeight: FontWeight.w600,
@@ -115,31 +118,34 @@ class ShowAirtimeSummary {
                     HeightWidget(height: 2),
                     SheetRowText(
                       keyText: 'Phone Number',
-                      valueText: '07067581951',
+                      valueText: '$number',
                     ),
                     HeightWidget(height: 2),
                     SheetRowText(
                       keyText: 'Airtime Amount',
-                      valueText: '400',
-                    ),
-                    HeightWidget(height: 2),
-                    SheetRowText(
-                      keyText: 'Amount To Pay',
-                      valueText: 'N410',
+                      valueText: 'N$amount',
                     ),
                     HeightWidget(height: 8),
                     GeneralButton(
                       size: size,
                       buttonColor: AppColors.primaryColor,
                       height: 7,
-                      text: 'Recharge Now',
+                      text: 'Proceed',
                       width: 90,
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                TransactionPinScreen(which: which),
+                            builder: (context) => TransactionPinScreen(
+                              which: which,
+                              amount: amount,
+                              phone: number,
+                              serviceid: '$network',
+                              userid: userid,
+                              selectedDataPlan: '',
+                              network: network,
+                              selectedDataId: '',
+                            ),
                           ),
                         );
                         // ShowDataSummary().showBottomSheet(context);

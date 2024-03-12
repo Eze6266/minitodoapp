@@ -3,11 +3,15 @@
 import 'package:datahub/HomeScreens/BuyAirtimeScreens/airtime_reusables.dart';
 import 'package:datahub/HomeScreens/DataScreens/data_reusables.dart';
 import 'package:datahub/HomeScreens/top_up_screen.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class AirtimeScreens extends StatefulWidget {
   const AirtimeScreens({super.key});
@@ -28,6 +32,7 @@ class _AirtimeScreensState extends State<AirtimeScreens> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authApi = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -197,31 +202,31 @@ class _AirtimeScreensState extends State<AirtimeScreens> {
                 child: BalanceAndFundRow(),
               ),
               HeightWidget(height: 5),
-              Center(
-                child: PoppinsCustText(
-                  color: Colors.black,
-                  size: 14.0,
-                  text: 'TOTAL AMOUNT ',
-                  weight: FontWeight.w500,
-                ),
-              ),
-              HeightWidget(height: 0.5),
-              Container(
-                height: 7 * size.height / 100,
-                width: 90 * size.width / 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Color.fromARGB(255, 216, 215, 215),
-                ),
-                child: Center(
-                  child: PoppinsCustText(
-                    color: Colors.black,
-                    size: 20.0,
-                    text: 'N2,500',
-                    weight: FontWeight.w600,
-                  ),
-                ),
-              ),
+              // Center(
+              //   child: PoppinsCustText(
+              //     color: Colors.black,
+              //     size: 14.0,
+              //     text: 'TOTAL AMOUNT ',
+              //     weight: FontWeight.w500,
+              //   ),
+              // ),
+              // HeightWidget(height: 0.5),
+              // Container(
+              //   height: 7 * size.height / 100,
+              //   width: 90 * size.width / 100,
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(8),
+              //     color: Color.fromARGB(255, 216, 215, 215),
+              //   ),
+              //   child: Center(
+              //     child: PoppinsCustText(
+              //       color: Colors.black,
+              //       size: 20.0,
+              //       text: 'N2,500',
+              //       weight: FontWeight.w600,
+              //     ),
+              //   ),
+              // ),
               HeightWidget(height: 10),
             ],
           ),
@@ -234,7 +239,42 @@ class _AirtimeScreensState extends State<AirtimeScreens> {
         text: 'Continue',
         width: 90,
         onPressed: () {
-          ShowAirtimeSummary().showBottomSheet(context, '1');
+          if (airtel == false &&
+              mtn == false &&
+              glo == false &&
+              etisalat == false) {
+            showTopSnackBar(
+              Overlay.of(context),
+              CustomSnackBar.error(
+                message: 'Select network',
+              ),
+              dismissType: DismissType.onSwipe,
+            );
+          } else {
+            amountController.text.isEmpty || phoneController.text.isEmpty
+                ? showTopSnackBar(
+                    Overlay.of(context),
+                    CustomSnackBar.error(
+                      message: 'input a valid number or amount',
+                    ),
+                    dismissType: DismissType.onSwipe,
+                  )
+                : ShowAirtimeSummary().showBottomSheet(
+                    context: context,
+                    which: '1',
+                    number: phoneController.text,
+                    network: mtn
+                        ? '01'
+                        : glo
+                            ? '02'
+                            : airtel
+                                ? '03'
+                                : '04',
+                    amount: amountController.text,
+                    amountToPay: amountController.text,
+                    userid: authApi.loginUserId,
+                  );
+          }
         },
         isLoading: isLoading,
       ),

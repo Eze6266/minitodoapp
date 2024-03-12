@@ -3,7 +3,9 @@
 import 'package:datahub/AuthScreens/login_screen.dart';
 import 'package:datahub/AuthScreens/sign_up_screen.dart';
 import 'package:datahub/Providers/auth_providers.dart';
+import 'package:datahub/Providers/cable_provider.dart';
 import 'package:datahub/Providers/data_providers.dart';
+import 'package:datahub/Providers/electricty_provider.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,12 @@ Future<void> main() async {
           ),
           ChangeNotifierProvider<AuthProvider>(
             create: (context) => AuthProvider(),
+          ),
+          ChangeNotifierProvider<CableProvider>(
+            create: (context) => CableProvider(),
+          ),
+          ChangeNotifierProvider<ElectricityProvider>(
+            create: (context) => ElectricityProvider(),
           ),
         ],
         child: MyApp(),

@@ -2,11 +2,13 @@
 
 import 'package:datahub/HomeScreens/home_reusables.dart';
 import 'package:datahub/HomeScreens/top_up_screen.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:datahub/WalletScreens/all_wallet_trans.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
@@ -39,6 +41,7 @@ class _WalletScreenState extends State<WalletScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var authApi = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -97,7 +100,12 @@ class _WalletScreenState extends State<WalletScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          eye ? '******' : 'N200,00',
+                          eye
+                              ? '******'
+                              : authApi.balance.toString() == '0' ||
+                                      authApi.balance.toString() == 'null'
+                                  ? '0'
+                                  : authApi.balance.toString(),
                           style: GoogleFonts.acme(
                             textStyle: TextStyle(
                               color: Colors.white,
@@ -127,39 +135,6 @@ class _WalletScreenState extends State<WalletScreen> {
                 ),
               ),
             ),
-
-            // Center(
-            //   child: GestureDetector(
-            //     onTap: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => TopUpAccountScreen(),
-            //         ),
-            //       );
-            //     },
-            //     child: Material(
-            //       elevation: 3,
-            //       borderRadius: BorderRadius.circular(10),
-            //       child: Container(
-            //         height: 7 * size.height / 100,
-            //         width: 90 * size.width / 100,
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.circular(10),
-            //           color: Color.fromARGB(255, 9, 90, 155),
-            //         ),
-            //         child: Center(
-            //           child: PoppinsCustText(
-            //             color: Colors.white,
-            //             size: 14.0,
-            //             text: 'Fund Wallet',
-            //             weight: FontWeight.w500,
-            //           ),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             HeightWidget(height: 4),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 2 * size.width / 100),

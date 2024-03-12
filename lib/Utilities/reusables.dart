@@ -3,12 +3,14 @@
 import 'dart:math';
 
 import 'package:confetti/confetti.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:share/share.dart';
 
 import '../HomeScreens/top_up_screen.dart';
@@ -423,12 +425,11 @@ class SuccessPopupCard extends StatelessWidget {
   SuccessPopupCard({
     super.key,
     required this.size,
-    required this.confetticontroller,
     required this.textcontent,
   });
 
   final Size size;
-  final ConfettiController confetticontroller;
+
   String textcontent;
 
   @override
@@ -563,12 +564,6 @@ class SuccessPopupCard extends StatelessWidget {
               ),
             ),
           ),
-          ConfettiWidget(
-            shouldLoop: true,
-            gravity: 0.01,
-            blastDirection: pi / 2,
-            confettiController: confetticontroller,
-          ),
         ],
       ),
     );
@@ -582,6 +577,7 @@ class BalanceAndFundRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var balanceApi = Provider.of<AuthProvider>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -600,7 +596,7 @@ class BalanceAndFundRow extends StatelessWidget {
             ),
             WidthWidget(width: 1),
             Text(
-              '40,000',
+              'N${balanceApi.balance.toString()}',
               style: GoogleFonts.acme(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.w500,
@@ -642,11 +638,13 @@ class VerificationRow extends StatelessWidget {
     required this.size,
     required this.idVerified,
     required this.onTap,
+    required this.isLoading,
   });
 
   final Size size;
   final bool idVerified;
   Function() onTap;
+  bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -665,17 +663,25 @@ class VerificationRow extends StatelessWidget {
                 color: AppColors.primaryColor,
               ),
               child: Center(
-                child: Text(
-                  'Check',
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      color: Colors.white,
-                      // color: Color.fromARGB(255, 198, 204, 213),
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
+                child: isLoading
+                    ? SizedBox(
+                        height: 2 * size.height / 100,
+                        width: 4 * size.width / 100,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(
+                        'Check',
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            color: Colors.white,
+                            // color: Color.fromARGB(255, 198, 204, 213),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
               ),
             ),
           ),
