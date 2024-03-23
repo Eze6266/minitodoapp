@@ -22,6 +22,14 @@ class _AccountScreenState extends State<AccountScreen> {
     SharedPreferences pref = await SharedPreferences.getInstance();
     email = pref.getString('email').toString();
     phone = pref.getString('phone').toString();
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initPref();
   }
 
   @override

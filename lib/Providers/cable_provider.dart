@@ -12,7 +12,7 @@ class CableProvider extends ChangeNotifier {
   var cableCustomerName = '';
   var verifyIucStatus;
   bool verifyIucisLoading = false;
-  var iucCustomerName = '';
+
   Future<String?> verifyIUCNumber({
     required String cableTv,
     required String iucNumber,
@@ -44,7 +44,7 @@ class CableProvider extends ChangeNotifier {
 
         if (jsonDecode(data)['status'].toString() == 'success') {
           verifyIucStatus = 'success';
-
+          cableCustomerName = jsonDecode(data)['cardDetails']['Customer_Name'];
           notifyListeners();
         } else {
           cableCustomerName = '';

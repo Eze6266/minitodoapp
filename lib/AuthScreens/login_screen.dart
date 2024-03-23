@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: AppColors.primaryColor,
           centerTitle: true,
           title: Text(
-            'DatHub',
+            'DataHub',
             style: TextStyle(
               fontSize: 18,
               color: Colors.white,

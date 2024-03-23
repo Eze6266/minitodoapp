@@ -167,7 +167,7 @@ class AuthProvider extends ChangeNotifier {
   var getUserMessage = '';
   var email;
   var phone;
-  var userName, balance, transactionsaccNumbers;
+  var userName, balance, transactionsaccNumbers, accountName, userBankName;
 
   Future<String?> getUser(
     String userId,
@@ -193,6 +193,15 @@ class AuthProvider extends ChangeNotifier {
       balance = jsonDecode(responseString)['data']['walletBalance'];
       email = jsonDecode(responseString)['data']['email'];
       phone = jsonDecode(responseString)['data']['phoneNumber'].toString();
+      transactionsaccNumbers = jsonDecode(responseString)['data']
+              ['VirtualAccountDetails']['accountNumber']
+          .toString();
+      accountName = jsonDecode(responseString)['data']['VirtualAccountDetails']
+              ['accountName']
+          .toString();
+      userBankName = jsonDecode(responseString)['data']['VirtualAccountDetails']
+              ['bankName']
+          .toString();
       SharedPreferences pref = await SharedPreferences.getInstance();
       pref.setString('email', email);
       pref.setString('phone', phone);
@@ -231,7 +240,7 @@ class AuthProvider extends ChangeNotifier {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(
         {
-          "bvn": bvn,
+          "nin": bvn,
         },
       ),
     );

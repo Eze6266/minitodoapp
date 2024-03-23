@@ -192,12 +192,24 @@ class _ElectricityScreenState extends State<ElectricityScreen> {
                 size: size,
                 idVerified: idVerified,
                 onTap: () async {
-                  await electricApi.verifyMeterNumber(
+                  await electricApi
+                      .verifyMeterNumber(
                     serviceID: electricApi.selectedElectricCode,
                     meterNumber: meterController.text,
                     type: prepaid ? 'prepaid' : 'postpaid',
                     token: authApi.loginUserId,
-                  );
+                  )
+                      .then((value) {
+                    if (value == 'success') {
+                      setState(() {
+                        idVerified = true;
+                        verifiedNameController.text =
+                            electricApi.meterCustomerName == ''
+                                ? ''
+                                : electricApi.meterCustomerName;
+                      });
+                    }
+                  });
 
                   // setState(() {
                   //   idVerified = true;

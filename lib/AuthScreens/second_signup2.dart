@@ -264,18 +264,22 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                   child: TitleTextFieldTile(
                     size: size,
                     whichController: bvnController,
-                    hint: 'Enter a valid BVN',
-                    title: 'BVN',
+                    hint: 'Enter a valid NIN',
+                    title: 'NIN',
                     keyboardtype: TextInputType.number,
                     isloading: isLoading,
                     onChanged: (value) {
                       if (value.length < 11) {
                         setState(() {
-                          bvnError = false;
+                          bvnError = true;
+                        });
+                      } else if (value.length > 11) {
+                        setState(() {
+                          bvnError = true;
                         });
                       } else {
                         setState(() {
-                          bvnError = true;
+                          bvnError = false;
                         });
                       }
                     },
@@ -287,7 +291,7 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            'BVN must be an 11 digit number',
+                            'NIN must be an 11 digit number',
                             style: TextStyle(
                               color: Colors.red,
                               fontSize: 12,
@@ -471,7 +475,7 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                       SizedBox(
                         width: 80 * size.width / 100,
                         child: Text(
-                          'Due to CBN regulations, all users are required to input their bvn for verification and creation of their dedicated account numbers',
+                          'Due to CBN regulations, all users are required to input their nin for verification and creation of their dedicated account numbers',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 12,

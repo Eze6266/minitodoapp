@@ -47,6 +47,7 @@ class ElectricityProvider extends ChangeNotifier {
 
         if (jsonDecode(data)['status'].toString() == 'success') {
           verifyMeterStatus = 'success';
+          meterCustomerName = jsonDecode(data)['MeterDetails']['Customer_Name'];
 
           notifyListeners();
         } else {

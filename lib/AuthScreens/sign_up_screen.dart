@@ -96,6 +96,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     title: 'Username',
                     keyboardtype: TextInputType.text,
                     isloading: isLoading,
+                    onChanged: (p0) {
+                      setState(() {});
+                    },
                   ),
                 ),
                 SizedBox(height: 3 * size.height / 100),
@@ -109,6 +112,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     title: 'First Name',
                     keyboardtype: TextInputType.text,
                     isloading: isLoading,
+                    onChanged: (p0) {
+                      setState(() {});
+                    },
                   ),
                 ),
                 SizedBox(height: 3 * size.height / 100),
@@ -122,7 +128,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     title: 'Last Name',
                     keyboardtype: TextInputType.text,
                     isloading: isLoading,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                   ),
                 ),
                 SizedBox(height: 3 * size.height / 100),
@@ -136,7 +144,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     title: 'Phone number',
                     keyboardtype: TextInputType.number,
                     isloading: isLoading,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      setState(() {});
+                    },
                   ),
                 ),
                 SizedBox(height: 6 * size.height / 100),

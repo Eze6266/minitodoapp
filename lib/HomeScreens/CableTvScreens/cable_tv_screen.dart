@@ -311,7 +311,8 @@ class _CableTvScreenState extends State<CableTvScreen> {
                           ),
                           child: RowTextCable(
                             keyText: 'Name',
-                            valText: 'japhet',
+                            valText:
+                                '${cableApi.cableCustomerName == '' ? '' : cableApi.cableCustomerName}',
                           ),
                         ),
                         HeightWidget(height: 0.5),
@@ -362,7 +363,7 @@ class _CableTvScreenState extends State<CableTvScreen> {
                       } else {
                         ShowCableSummary().showBottomSheet(
                           iucNumber: iucController.text,
-                          verifiedName: cableApi.iucCustomerName,
+                          verifiedName: cableApi.cableCustomerName,
                           plan: cableApi.selectedCablePlan,
                           amount: cableApi.selectedCableAmount,
                           userid: userid.toString(),
