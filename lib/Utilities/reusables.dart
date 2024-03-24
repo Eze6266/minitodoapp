@@ -242,7 +242,7 @@ class FundingTipTag extends StatelessWidget {
                     color: Colors.white,
                     size: 10.0,
                     text:
-                        'Transfer to any of the virtual account numbers below to fund your account',
+                        'Transfer to the virtual account number below to fund your account',
                     weight: FontWeight.w400,
                   ),
                 ),
