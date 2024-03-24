@@ -85,8 +85,7 @@ class DataProvider extends ChangeNotifier {
     buyAirtimeIsLoading = true;
     notifyListeners();
     var response = await http.post(
-      Uri.parse(
-          'https://vtu-apis.onrender.com/api/users/get-all-data-plans/$userid'),
+      Uri.parse('https://vtu-apis.onrender.com/api/users/buy-card/$userid'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(
         {
