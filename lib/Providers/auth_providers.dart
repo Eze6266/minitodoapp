@@ -230,17 +230,17 @@ class AuthProvider extends ChangeNotifier {
 
   Future<String?> getAccNum(
     String userId,
-    String bvn,
+    String nin,
   ) async {
     getAccNumIsLoading = true;
     notifyListeners();
     var response = await http.post(
       Uri.parse(
-          'https://vtu-apis.onrender.com/api/users/user-virtual-accounts/$userId'),
+          'https://vtu-apis.onrender.com/api/users/accounts/create-virtual-account/$userId'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(
         {
-          "nin": bvn,
+          "nin": nin,
         },
       ),
     );
@@ -256,8 +256,9 @@ class AuthProvider extends ChangeNotifier {
       String responseString = response.body;
       getAccNumStatus = jsonDecode(responseString)['status'].toString();
       getAccNumMessage = jsonDecode(responseString)['message'];
-      accNumbers = jsonDecode(responseString)['data']['data']['account_number'];
-      bankName = jsonDecode(responseString)['data']['data']['bank_name'];
+      accNumbers = jsonDecode(responseString)['data']['accountNumber'];
+      bankName = jsonDecode(responseString)['data']['bankName'];
+      accountName = jsonDecode(responseString)['data']['accountName'];
 
       notifyListeners();
       return getAccNumStatus;
@@ -287,7 +288,7 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
     var response = await http.post(
       Uri.parse(
-          'https://vtu-apis.onrender.com/api/users/transaction-pin-otp/$userId'),
+          'https://vtu-apis.onrender.com/api/users/set-transaction-pin/$userId'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(
         {

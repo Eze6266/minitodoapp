@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_string_interpolations
 
 import 'package:clipboard/clipboard.dart';
+import 'package:datahub/Providers/auth_providers.dart';
 import 'package:datahub/Utilities/app_colors.dart';
 import 'package:datahub/Utilities/reusables.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class TopUpAccountScreen extends StatefulWidget {
   const TopUpAccountScreen({super.key});
@@ -28,12 +30,10 @@ class _TopUpAccountScreenState extends State<TopUpAccountScreen> {
     });
   }
 
-  String monniepoint = '6455080733';
-  String wema = '9548078726';
-  String sterling = '9314267252';
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    var regUserApi = Provider.of<AuthProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -77,37 +77,13 @@ class _TopUpAccountScreenState extends State<TopUpAccountScreen> {
               HeightWidget(height: 3),
               AccountNumberCard(
                 size: size,
-                accNumber: monniepoint,
-                accName: 'man',
-                bankName: 'MONNIEPOINT',
+                accNumber: regUserApi.accNumbers,
+                accName: regUserApi.accountName,
+                bankName: regUserApi.userBankName,
                 gradColor: Colors.orange,
                 gradColor2: Colors.red,
                 onTap: () {
-                  copyToClipboard(context, monniepoint);
-                },
-              ),
-              HeightWidget(height: 2),
-              AccountNumberCard(
-                size: size,
-                accNumber: wema,
-                accName: 'man',
-                bankName: 'WEMA',
-                gradColor: Colors.blue,
-                gradColor2: Colors.green,
-                onTap: () {
-                  copyToClipboard(context, wema);
-                },
-              ),
-              HeightWidget(height: 2),
-              AccountNumberCard(
-                size: size,
-                accNumber: sterling,
-                accName: 'man',
-                bankName: 'STERLING',
-                gradColor: Colors.purple,
-                gradColor2: Colors.pink,
-                onTap: () {
-                  copyToClipboard(context, sterling);
+                  copyToClipboard(context, regUserApi.accNumbers);
                 },
               ),
               HeightWidget(height: 10),

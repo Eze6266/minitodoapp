@@ -88,7 +88,7 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     var regUserApi = Provider.of<AuthProvider>(context);
-    isLoading = Provider.of<AuthProvider>(context).regUserIsLoading;
+    //  isLoading = Provider.of<AuthProvider>(context).regUserIsLoading;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -390,9 +390,12 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                       ? () {}
                       : () async {
                           if (confirmtext == 'true') {
+                            setState(() {
+                              isLoading = true;
+                            });
                             await regUserApi
                                 .registerUser(
-                              username: widget.firstName,
+                              username: widget.username,
                               firstName: widget.firstName,
                               lastName: widget.lastName,
                               phone: widget.phone,
@@ -401,17 +404,25 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                             )
                                 .then((value) async {
                               if (value == 'success') {
-                                isLoading = regUserApi.getAccNumIsLoading;
+                                setState(() {
+                                  isLoading = true;
+                                });
                                 await regUserApi
                                     .getAccNum(regUserApi.regUserId,
                                         bvnController.text)
                                     .then((value) async {
                                   if (value == 'success') {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
                                     await regUserApi
                                         .setUserPin(regUserApi.regUserId,
                                             pinController.text)
                                         .then((value) {
                                       if (value == 'success') {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
                                         isLoading =
                                             regUserApi.setUserPinIsLoading;
                                         Navigator.push(
@@ -420,9 +431,24 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                                             builder: (context) => LoginScreen(),
                                           ),
                                         );
-                                      } else {}
+                                      } else {
+                                        setState(() {
+                                          isLoading = false;
+                                        });
+                                        showTopSnackBar(
+                                          Overlay.of(context),
+                                          CustomSnackBar.error(
+                                            message:
+                                                '${regUserApi.setUserPinMessage}',
+                                          ),
+                                          dismissType: DismissType.onSwipe,
+                                        );
+                                      }
                                     });
                                   } else {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
                                     showTopSnackBar(
                                       Overlay.of(context),
                                       CustomSnackBar.error(
@@ -433,6 +459,9 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                                   }
                                 });
                               } else {
+                                setState(() {
+                                  isLoading = false;
+                                });
                                 showTopSnackBar(
                                   Overlay.of(context),
                                   CustomSnackBar.error(
@@ -443,6 +472,9 @@ class _SignUp2ScreenState extends State<SignUp2Screen> {
                               }
                             });
                           } else {
+                            setState(() {
+                              isLoading = false;
+                            });
                             showTopSnackBar(
                               Overlay.of(context),
                               CustomSnackBar.error(

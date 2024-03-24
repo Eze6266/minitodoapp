@@ -352,13 +352,13 @@ class AccountNumberCard extends StatelessWidget {
               PoppinsCustText(
                 color: Colors.white,
                 size: 13.0,
-                text: '$accName',
+                text: 'Acc name',
                 weight: FontWeight.w400,
               ),
               PoppinsCustText(
                 color: Colors.white,
                 size: 14.0,
-                text: 'N50 Charge Applied',
+                text: '$accName',
                 weight: FontWeight.w500,
               ),
             ],
