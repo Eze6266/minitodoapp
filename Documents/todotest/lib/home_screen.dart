@@ -7,10 +7,6 @@ import 'package:todotest/enter_todo_title.dart';
 import 'package:todotest/reusables.dart';
 
 class HomeScreen extends StatefulWidget {
-  final List<Task> tasks;
-
-  const HomeScreen({super.key, required this.tasks});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -45,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
     if (result != null) {
       setState(() {
-        widget.tasks[index] = result;
+        tasks[index] = result;
       });
     }
   }
@@ -53,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void deleteTask(Task task, int index) async {
     await FirebaseFirestore.instance.collection('tasks').doc(task.id).delete();
     setState(() {
-      widget.tasks.removeAt(index);
+      tasks.removeAt(index);
     });
   }
 
@@ -64,20 +60,20 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         body: Column(
           children: [
-            widget.tasks.isEmpty ? SizedBox.shrink() : HomeTopBanner(),
+            tasks.isEmpty ? SizedBox.shrink() : HomeTopBanner(),
             Height(h: 3),
-            widget.tasks.isEmpty
+            tasks.isEmpty
                 ? Expanded(
                     child: EmptyListContainer(size: size),
                   )
                 : Expanded(
                     child: ListView.builder(
-                      itemCount: widget.tasks.length,
+                      itemCount: tasks.length,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onTap: () => editTask(widget.tasks[index], index),
+                          onTap: () => editTask(tasks[index], index),
                           child: TaskItem(
-                            task: widget.tasks[index],
+                            task: tasks[index],
                           ),
                         );
                       },

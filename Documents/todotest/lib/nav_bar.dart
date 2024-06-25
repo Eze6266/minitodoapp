@@ -29,7 +29,7 @@ class _NavBarState extends State<NavBar> {
     super.initState();
     myIndex = widget.chosenmyIndex;
     widgetList = [
-      HomeScreen(tasks: tasks),
+      HomeScreen(),
       SettingsScreen(),
     ];
   }
@@ -37,8 +37,7 @@ class _NavBarState extends State<NavBar> {
   void addTask(Task task) {
     setState(() {
       tasks.add(task);
-      widgetList[0] =
-          HomeScreen(tasks: tasks); // Update the HomeScreen with the new tasks
+      widgetList[0] = HomeScreen(); // Update the HomeScreen with the new tasks
     });
   }
 
