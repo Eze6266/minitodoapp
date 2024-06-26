@@ -56,6 +56,62 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+  Future<void> signInWithGoogle() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+    try {
+      await Auth().signInWithGoogle();
+    } on FirebaseException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      setState(() {
+        FancySnackbar.showSnackbar(
+          context,
+          snackBarType: FancySnackBarType.error,
+          title: "Error!",
+          message: "${e.message}",
+          duration: 5,
+          onCloseEvent: () {},
+        );
+        errorMessage = e.message!;
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
+  Future<void> signInWithFacebook() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+    try {
+      await Auth().signInWithFacebook();
+    } on FirebaseException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      setState(() {
+        FancySnackbar.showSnackbar(
+          context,
+          snackBarType: FancySnackBarType.error,
+          title: "Error!",
+          message: "${e.message}",
+          duration: 5,
+          onCloseEvent: () {},
+        );
+        errorMessage = e.message!;
+      });
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -187,9 +243,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GoogleFbChip(imgUrl: 'googlebtn'),
+                      GestureDetector(
+                        onTap: () {
+                          signInWithGoogle();
+                        },
+                        child: GoogleFbChip(imgUrl: 'googlebtn'),
+                      ),
                       Width(w: 6),
-                      GoogleFbChip(imgUrl: 'facebookbtn'),
+                      GestureDetector(
+                        onTap: () {
+                          signInWithFacebook();
+                        },
+                        child: GoogleFbChip(imgUrl: 'facebookbtn'),
+                      ),
                     ],
                   ),
                   Height(h: 4),

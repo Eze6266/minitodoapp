@@ -46,6 +46,8 @@ dependencies:
   change_app_package_name: ^1.2.0
   top_snackbar_flutter: ^3.1.0
   cloud_firestore:
+  google_sign_in:
+  flutter_facebook_auth:
   fancy_snackbar:
     git:
       url: https://github.com/MR0100/fancy_snackbar.git
